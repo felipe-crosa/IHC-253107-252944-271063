@@ -1,12 +1,16 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 
-export default function Login() {
+export default function Register() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Back</Text>
+      <Text style={styles.title}>Join EventBuddy</Text>
       <View style={styles.content}>
         <View style={styles.form}>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Full Name</Text>
+                <TextInput style={styles.inputValue} placeholder={'Your name'} placeholderTextColor={'#99A1AF'}/>
+            </View>
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Email</Text>
                 <TextInput style={styles.inputValue} placeholder={'your@email.com'} placeholderTextColor={'#99A1AF'}/>
@@ -14,32 +18,26 @@ export default function Login() {
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Password</Text>
                 <TextInput style={styles.inputValue} placeholder={'*******'} secureTextEntry={true} placeholderTextColor={'#99A1AF'}/>
-                <Text style={styles.forgotPasswordLabel}>Forgot your password?</Text>
             </View>
-        </View>
-        <Pressable
-          onPress={() => console.log('Login pressed')}
-          style={styles.loginButton}>
-            <Text style={styles.loginLabel}>Login</Text>
-          </Pressable>
-          <View style={styles.optionsSection}>
-            <View style={styles.divider}>
-                <View style={styles.line}></View>
-                <Text style={styles.dividerText}>or continue with</Text>
-                <View style={styles.line}></View>
-            </View>
-            <View style={styles.options}>
-                <Pressable style={styles.option} onPress={() => console.log('Google pressed')}>
+            <View>
+                <Pressable style={styles.profileImageBtn}>
                     <Image
-                        source={require('@/assets/images/google-icon.svg')}
-                        style={{ width: 30, height: 30 }} />
+                        source={require('@/assets/images/profile-placeholder.png')}
+                        style={styles.profileImage} />
                 </Pressable>
             </View>
-            <View style={styles.noAccount}>
-                <Text style={styles.noAccountText}>Don't have an account?</Text>
-                <Text style={styles.signUpText}>Sign Up</Text>
+            <View style={styles.registerButtonSection}>
+            <Pressable
+            onPress={() => console.log('Login pressed')}
+            style={styles.registerButton}>
+                <Text style={styles.registerLabel}>Create Account</Text>
+            </Pressable>
+            <View style={styles.hasAccount}>
+                <Text style={styles.hasAccountText}>Don't have an account?</Text>
+                <Text style={styles.signInText}>Sign Up</Text>
             </View>
-          </View>
+        </View>
+        </View>
       </View>
     </View>
   );
@@ -94,12 +92,31 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: '100%',
   }, 
-  forgotPasswordLabel: {
-    color: "#8200DB",
-    fontSize: 12,
-    fontWeight: '600',
+  profileImageBtn: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    borderWidth: 3,
+    padding: 40,
+    borderColor: '#E9D4FF',
+    backgroundColor: '#D9D9D9',
   },
-  loginButton: {
+  profileImage: {
+    width: 40,
+    height: 40,
+  },
+  registerButtonSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    gap: 10,
+  },
+  registerButton: {
     backgroundColor: '#8200DB',
     padding: 15,
     borderRadius: 15,
@@ -107,62 +124,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   }, 
-  loginLabel: {
+  registerLabel: {
     color: 'white', 
     fontWeight: '700'
   }, 
-  optionsSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
-    gap: 25,
-  },
-  divider: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    gap: 10,
-  },
-  line: {
-    backgroundColor: '#99A1AF',
-    height: 1,
-    flex: 1,
-  }, 
-  dividerText: {
-    color: '#99A1AF',
-    fontSize: 14,
-    fontWeight: '500',
-    position: 'relative',
-    top: -1,
-  }, 
-  options: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-evenly',
-  },
-  option: {
-    borderWidth: 1,
-    borderColor: '#99A1AF',
-    borderRadius: 15,
-    paddingHorizontal: 50,
-    paddingVertical: 10,
-  }, 
-  noAccount: {
+  hasAccount: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
   },
-  noAccountText: {
+  hasAccountText: {
     color: '#1F2937',
     fontSize: 14,
     fontWeight: '400',
   },
-  signUpText: {
+  signInText: {
     color: '#8200DB',
     fontSize: 14,
     fontWeight: '600',
