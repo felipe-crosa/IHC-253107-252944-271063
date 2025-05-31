@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Route;
+use Lightit\Authentication\App\Controllers\GoogleLoginController;
+use Lightit\Authentication\App\Controllers\LoginController;
+use Lightit\Authentication\App\Controllers\LogoutController;
+use Lightit\Authentication\App\Controllers\RefreshController;
 use Lightit\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -24,28 +28,14 @@ use Lightit\Backoffice\Users\App\Controllers\{
 |
 */
 
-Route::middleware('auth:sanctum')
-    ->get('/me', function (#[CurrentUser] $user) {
+Route::prefix('auth')->group(static function (): void {
+    Route::post('login', LoginController::class);
+    Route::post('google', GoogleLoginController::class);
+    Route::post('register', StoreUserController::class);
+    Route::post('refresh', RefreshController::class)->middleware('auth');
+    Route::get('me', function (#[CurrentUser] $user) {
         return response()->json([
             'data' => $user,
         ]);
-    });
-
-/*
-|--------------------------------------------------------------------------
-| Users Routes
-|--------------------------------------------------------------------------
-*/
-Route::prefix('users')
-    ->middleware([])
-    ->group(static function (): void {
-        Route::get('/', ListUserController::class);
-        Route::get('/{user}', GetUserController::class)
-            ->withTrashed()
-            ->whereNumber('user');
-        Route::post('/', StoreUserController::class);
-        Route::put('/{user}', UpdateUserController::class)
-            ->whereNumber('user');
-        Route::delete('/{user}', DeleteUserController::class)
-            ->whereNumber('user');
-    });
+    })->middleware('auth');
+});
