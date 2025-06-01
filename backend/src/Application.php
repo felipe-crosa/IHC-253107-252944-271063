@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Lightit;
+namespace IHC;
 
 use Illuminate\Foundation\Application as LaravelApplication;
 
 class Application extends LaravelApplication
 {
-    protected $namespace = 'Lightit\Shared\App\\';
+    protected $namespace = 'IHC\Shared\App\\';
 
     public function __construct($basePath = null)
     {

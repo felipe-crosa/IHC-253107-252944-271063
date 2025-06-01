@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Shared\App\Providers;
+namespace IHC\Shared\App\Providers;
 
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Lightit\Shared\App\Events\TestEvent;
-use Lightit\Shared\App\Listeners\TestListener;
+use IHC\Shared\App\Events\TestEvent;
+use IHC\Shared\App\Listeners\TestListener;
 
 class EventServiceProvider extends ServiceProvider
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Authentication\Domain\Actions;
+namespace IHC\Authentication\Domain\Actions;
 
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use PHPOpenSourceSaver\JWTAuth\JWTGuard;

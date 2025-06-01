@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Authentication\Domain\Actions;
+namespace IHC\Authentication\Domain\Actions;
 
 use Google\Client as GoogleClient;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Lightit\Authentication\Domain\DataTransferObjects\LoginDto;
-use Lightit\Backoffice\Users\Domain\Models\User;
-use Lightit\Shared\App\Exceptions\Http\InvalidGoogleTokenException;
+use IHC\Authentication\Domain\DataTransferObjects\LoginDto;
+use IHC\Backoffice\Users\Domain\Models\User;
+use IHC\Shared\App\Exceptions\Http\InvalidGoogleTokenException;
 use UnexpectedValueException;
 
 class GoogleLoginAction

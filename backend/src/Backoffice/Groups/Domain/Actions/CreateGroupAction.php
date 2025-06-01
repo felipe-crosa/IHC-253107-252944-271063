@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\Domain\Actions;
+namespace IHC\Backoffice\Groups\Domain\Actions;
 
-use Lightit\Backoffice\Groups\Domain\DataTransferObjects\UpsertGroupDto;
-use Lightit\Backoffice\Groups\Domain\Models\Group;
-use Lightit\Backoffice\Users\Domain\Models\User;
+use IHC\Backoffice\Groups\Domain\DataTransferObjects\UpsertGroupDto;
+use IHC\Backoffice\Groups\Domain\Models\Group;
+use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
+use IHC\Backoffice\Users\Domain\Models\User;
 
 class CreateGroupAction
 {
@@ -18,6 +19,8 @@ class CreateGroupAction
         $group->owner_id = $user->id;
 
         $group->save();
+
+        $group->users()->attach($user, ['status' => InviteStatus::ACCEPTED]);
 
         return $group;
     }

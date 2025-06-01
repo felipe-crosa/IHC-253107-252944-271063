@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Security\App\Middlewares;
+namespace IHC\Security\App\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;

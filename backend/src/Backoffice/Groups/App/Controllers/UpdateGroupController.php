@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\App\Controllers;
+namespace IHC\Backoffice\Groups\App\Controllers;
 
-use Lightit\Backoffice\Groups\App\Requests\UpsertGroupRequest;
-use Lightit\Backoffice\Groups\Domain\Actions\CreateGroupAction;
-use Lightit\Backoffice\Groups\Domain\Actions\UpdateGroupAction;
-use Lightit\Backoffice\Groups\Domain\Models\Group;
+use IHC\Backoffice\Groups\App\Requests\UpsertGroupRequest;
+use IHC\Backoffice\Groups\Domain\Actions\CreateGroupAction;
+use IHC\Backoffice\Groups\Domain\Actions\UpdateGroupAction;
+use IHC\Backoffice\Groups\Domain\Models\Group;
 
 class UpdateGroupController
 {

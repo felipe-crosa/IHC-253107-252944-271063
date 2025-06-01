@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\Domain\DataTransferObjects;
+namespace IHC\Backoffice\Groups\Domain\DataTransferObjects;
 
 class UpsertGroupDto
 {
