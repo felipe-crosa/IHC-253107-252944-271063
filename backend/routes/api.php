@@ -8,6 +8,11 @@ use Lightit\Authentication\App\Controllers\GoogleLoginController;
 use Lightit\Authentication\App\Controllers\LoginController;
 use Lightit\Authentication\App\Controllers\LogoutController;
 use Lightit\Authentication\App\Controllers\RefreshController;
+use Lightit\Backoffice\Groups\App\Controllers\CreateGroupController;
+use Lightit\Backoffice\Groups\App\Controllers\DeleteGroupController;
+use Lightit\Backoffice\Groups\App\Controllers\GetGroupController;
+use Lightit\Backoffice\Groups\App\Controllers\UpdateGroupController;
+
 use Lightit\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -38,4 +43,13 @@ Route::prefix('auth')->group(static function (): void {
             'data' => $user,
         ]);
     })->middleware('auth');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('groups')->group(static function (): void {
+        Route::post('/', CreateGroupController::class);
+        Route::get('/{group}', GetGroupController::class);
+        Route::put('/{group}', UpdateGroupController::class);
+        Route::delete('/{group}', DeleteGroupController::class);
+    });
 });
