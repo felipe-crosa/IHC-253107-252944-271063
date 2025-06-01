@@ -8,6 +8,10 @@ use IHC\Authentication\App\Controllers\GoogleLoginController;
 use IHC\Authentication\App\Controllers\LoginController;
 use IHC\Authentication\App\Controllers\LogoutController;
 use IHC\Authentication\App\Controllers\RefreshController;
+use IHC\Backoffice\Events\App\Controllers\CreateEventController;
+use IHC\Backoffice\Events\App\Controllers\DeleteEventController;
+use IHC\Backoffice\Events\App\Controllers\GetEventController;
+use IHC\Backoffice\Events\App\Controllers\UpdateEventController;
 use IHC\Backoffice\Groups\App\Controllers\CreateGroupController;
 use IHC\Backoffice\Groups\App\Controllers\DeleteGroupController;
 use IHC\Backoffice\Groups\App\Controllers\GetGroupController;
@@ -63,7 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{group}/leave', LeaveGroupController::class);
         Route::get('/{group}/invites', ListGroupInvitesController::class);
         Route::post('/{group}/invites', InviteUserController::class);
-        // Route::delete('/{group}/invites/{invitation}', DeleteGroupInviteController::class);
+        // Route::get('/{group}/events', ListGroupEventsController::class);
     });
 
     Route::prefix('invites')->group(static function (): void {
@@ -71,6 +75,15 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{invitation}/reject', RejectInviteController::class);
         Route::get('/', ListInvitesController::class);
     });
+
+    Route::prefix('events')->group(static function (): void {
+        // Route::get('/', ListEventsController::class);
+        Route::post('/', CreateEventController::class);
+        Route::get('/{event}', GetEventController::class);
+        Route::put('/{event}', UpdateEventController::class);
+        Route::delete('/{event}', DeleteEventController::class);
+    });
+
 });
 
 
