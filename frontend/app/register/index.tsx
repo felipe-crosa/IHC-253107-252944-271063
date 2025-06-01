@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 
-export default function Register() {
+export default function RegisterScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Join EventBuddy</Text>
@@ -33,8 +34,8 @@ export default function Register() {
                 <Text style={styles.registerLabel}>Create Account</Text>
             </Pressable>
             <View style={styles.hasAccount}>
-                <Text style={styles.hasAccountText}>Don't have an account?</Text>
-                <Text style={styles.signInText}>Sign Up</Text>
+                <Text style={styles.hasAccountText}>Already have an account?</Text>
+                <Link href="/login" style={styles.signInText}>Sign In</Link>
             </View>
         </View>
         </View>

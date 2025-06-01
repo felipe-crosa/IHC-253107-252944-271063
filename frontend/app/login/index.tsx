@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 
-export default function Login() {
+export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
@@ -37,7 +38,7 @@ export default function Login() {
             </View>
             <View style={styles.noAccount}>
                 <Text style={styles.noAccountText}>Don't have an account?</Text>
-                <Text style={styles.signUpText}>Sign Up</Text>
+                <Link href="/register" style={styles.signUpText}>Sign Up</Link>
             </View>
           </View>
       </View>
