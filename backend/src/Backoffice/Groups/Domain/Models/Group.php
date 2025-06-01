@@ -12,7 +12,7 @@ use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
 use IHC\Backoffice\Users\Domain\Models\User;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $name
@@ -37,6 +37,8 @@ use IHC\Backoffice\Users\Domain\Models\User;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withoutTrashed()
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $users
  * @property-read int|null $users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $invites
+ * @property-read int|null $invites_count
  * @mixin \Eloquent
  */
 class Group extends Model
