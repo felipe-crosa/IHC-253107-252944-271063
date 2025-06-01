@@ -6,6 +6,8 @@ namespace IHC\Backoffice\Users\Domain\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
+use IHC\Backoffice\Events\Domain\Models\Event;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -45,6 +47,12 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property-read int|null $groups_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $invites
  * @property-read int|null $invites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $acceptedEvents
+ * @property-read int|null $accepted_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $events
+ * @property-read int|null $events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $pendingEvents
+ * @property-read int|null $pending_events_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements JWTSubject
@@ -113,5 +121,22 @@ class User extends Authenticatable implements JWTSubject
     public function invites(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::PENDING);
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants');
+    }
+
+    public function acceptedEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants')
+            ->wherePivot('status', ParticipationStatus::ACCEPTED);
+    }
+
+    public function pendingEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants')
+            ->wherePivot('status', ParticipationStatus::PENDING);
     }
 }

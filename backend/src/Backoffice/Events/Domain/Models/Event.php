@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace IHC\Backoffice\Events\Domain\Models;
 
+use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
+use IHC\Backoffice\Users\Domain\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  *
@@ -33,6 +36,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereStartAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Event whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $cancelledAttendees
+ * @property-read int|null $cancelled_attendees_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $confirmedAttendees
+ * @property-read int|null $confirmed_attendees_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $pendingAttendees
+ * @property-read int|null $pending_attendees_count
  * @mixin \Eloquent
  */
 class Event extends Model
@@ -40,5 +49,29 @@ class Event extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo('categories');
+    }
+
+    public function confirmedAttendees(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'participants'
+        )->wherePivot('status', ParticipationStatus::ACCEPTED);
+    }
+
+    public function cancelledAttendees(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'participants'
+        )->wherePivot('status', ParticipationStatus::REJECTED);
+    }
+
+    public function pendingAttendees(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'participants'
+        )->wherePivot('status', ParticipationStatus::PENDING);
     }
 }
