@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Users\Domain\Models;
+namespace IHC\Backoffice\Users\Domain\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use IHC\Backoffice\Groups\Domain\Models\Group;
+use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -38,6 +41,10 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $groups
+ * @property-read int|null $groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $invites
+ * @property-read int|null $invites_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements JWTSubject
@@ -96,5 +103,15 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::ACCEPTED);
+    }
+
+    public function invites(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::PENDING);
     }
 }

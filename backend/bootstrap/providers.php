@@ -1,6 +1,6 @@
 <?php
 
 return [
-    Lightit\Shared\App\Providers\AppServiceProvider::class,
-    Lightit\Shared\App\Providers\EventServiceProvider::class,
+    IHC\Shared\App\Providers\AppServiceProvider::class,
+    IHC\Shared\App\Providers\EventServiceProvider::class,
 ];

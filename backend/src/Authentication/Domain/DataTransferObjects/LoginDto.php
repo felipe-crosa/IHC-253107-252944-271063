@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Authentication\Domain\DataTransferObjects;
+namespace IHC\Authentication\Domain\DataTransferObjects;
 
 readonly class LoginDto
 {

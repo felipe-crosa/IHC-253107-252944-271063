@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Security\Domain\Actions;
+namespace IHC\Security\Domain\Actions;
 
 class PreventDebugInProductionAction
 {
