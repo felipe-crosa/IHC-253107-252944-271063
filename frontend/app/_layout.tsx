@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { AuthProvider } from './stores/useAuthStore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,9 +24,11 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={styles.container}>
-      <Slot /> 
-    </View>
+    <AuthProvider>
+         <View style={styles.container}>
+            <Slot /> 
+        </View>
+    </AuthProvider>
   );
 }
 

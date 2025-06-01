@@ -1,8 +1,38 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
+import { LoginFormData } from '../types/login';
+import { useState } from 'react';
+import { loginSchema } from '../schemas/login.schema';
+import { useAuth } from '../stores/useAuthStore';
 
 export default function LoginScreen() {
+    const [error, setError] = useState<string | null>(null);
+    const { login } = useAuth();
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+      } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: ''
+        }
+      });
+
+    const onSubmit: SubmitHandler<LoginFormData> = async ({ email, password }) => {
+        try {
+            await login(email, password);
+            console.log('success');
+        } catch (err: any) {
+            setError(err.message);
+        }
+    }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
@@ -10,16 +40,44 @@ export default function LoginScreen() {
         <View style={styles.form}>
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Email</Text>
-                <TextInput style={styles.inputValue} placeholder={'your@email.com'} placeholderTextColor={'#99A1AF'}/>
+                <Controller
+                    control={control}
+                    name="email"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                        style={styles.inputValue}
+                        placeholder="your@email.com"
+                        placeholderTextColor="#99A1AF"
+                        onChangeText={onChange}
+                        value={value}
+                        />
+                    
+                    )}
+                />
+                 {errors.email && <Text style={styles.fieldError}>{errors.email.message}</Text>}
             </View>
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Password</Text>
-                <TextInput style={styles.inputValue} placeholder={'*******'} secureTextEntry={true} placeholderTextColor={'#99A1AF'}/>
+                <Controller
+                    control={control}
+                    name="password"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                        style={styles.inputValue}
+                        placeholder="*******"
+                        placeholderTextColor="#99A1AF"
+                        secureTextEntry
+                        onChangeText={onChange}
+                        value={value}
+                        />
+                    )}
+                />     
+                {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}           
                 <Text style={styles.forgotPasswordLabel}>Forgot your password?</Text>
             </View>
         </View>
         <Pressable
-          onPress={() => console.log('Login pressed')}
+          onPress={handleSubmit(onSubmit)}
           style={styles.loginButton}>
             <Text style={styles.loginLabel}>Login</Text>
           </Pressable>
@@ -168,4 +226,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  fieldError: {
+    color: 'red',
+    fontSize: 12,
+    width: '100%',
+  }
 });
