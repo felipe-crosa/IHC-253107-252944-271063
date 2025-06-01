@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace IHC\Backoffice\Events\Domain\Actions;
 
 use IHC\Backoffice\Events\Domain\DomainTransferObjects\CreateEventDto;
+use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
 use IHC\Backoffice\Events\Domain\Models\Event;
+use IHC\Backoffice\Events\Domain\Models\Participant;
+use IHC\Backoffice\Groups\Domain\Models\Group;
 use IHC\Backoffice\Users\Domain\Models\User;
 
 class CreateEventAction
@@ -26,6 +29,17 @@ class CreateEventAction
         $event->group_id = $eventDto->groupId;
 
         $event->save();
+
+        $groupMembers = Group::find($eventDto->groupId)->users;
+
+        $event->pendingAttendees()->attach(
+            $groupMembers->pluck('id'),
+            ['status' => ParticipationStatus::PENDING]
+        );
+
+        Participant::where('event_id', $event->id)
+            ->whereIn('user_id', $groupMembers->pluck('id'))
+            ->update(['status' => ParticipationStatus::ACCEPTED]);
 
         return $event;
     }
