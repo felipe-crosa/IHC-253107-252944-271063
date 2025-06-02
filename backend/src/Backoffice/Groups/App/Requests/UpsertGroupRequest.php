@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\App\Requests;
+namespace IHC\Backoffice\Groups\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Lightit\Backoffice\Groups\Domain\DataTransferObjects\UpsertGroupDto;
+use IHC\Backoffice\Groups\Domain\DataTransferObjects\UpsertGroupDto;
 
 class UpsertGroupRequest extends FormRequest
 {

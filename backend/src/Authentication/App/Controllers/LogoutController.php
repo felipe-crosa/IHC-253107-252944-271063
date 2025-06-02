@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Authentication\App\Controllers;
+namespace IHC\Authentication\App\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Lightit\Authentication\Domain\Actions\LogoutAction;
-use Lightit\Models\JWTAuthenticatable;
-use Lightit\Shared\App\Exceptions\Http\UnauthorizedException;
+use IHC\Authentication\Domain\Actions\LogoutAction;
+use IHC\Models\JWTAuthenticatable;
+use IHC\Shared\App\Exceptions\Http\UnauthorizedException;
 
 class LogoutController
 {

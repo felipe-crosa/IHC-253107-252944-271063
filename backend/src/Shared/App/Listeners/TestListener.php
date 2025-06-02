@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Shared\App\Listeners;
+namespace IHC\Shared\App\Listeners;
 
-use Lightit\Shared\App\Events\TestEvent;
+use IHC\Shared\App\Events\TestEvent;
 
 class TestListener
 {

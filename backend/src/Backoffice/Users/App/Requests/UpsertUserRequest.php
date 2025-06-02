@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Users\App\Requests;
+namespace IHC\Backoffice\Users\App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Lightit\Backoffice\Users\Domain\DataTransferObjects\UserDto;
-use Lightit\Backoffice\Users\Domain\Models\User;
+use IHC\Backoffice\Users\Domain\DataTransferObjects\UserDto;
+use IHC\Backoffice\Users\Domain\Models\User;
 
 class UpsertUserRequest extends FormRequest
 {

@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Users\Domain\Models;
+namespace IHC\Backoffice\Users\Domain\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
+use IHC\Backoffice\Events\Domain\Models\Event;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use IHC\Backoffice\Groups\Domain\Models\Group;
+use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -38,6 +43,16 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $groups
+ * @property-read int|null $groups_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Group> $invites
+ * @property-read int|null $invites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $acceptedEvents
+ * @property-read int|null $accepted_events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $events
+ * @property-read int|null $events_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $pendingEvents
+ * @property-read int|null $pending_events_count
  * @mixin \Eloquent
  */
 class User extends Authenticatable implements JWTSubject
@@ -96,5 +111,32 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::ACCEPTED);
+    }
+
+    public function invites(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::PENDING);
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants');
+    }
+
+    public function acceptedEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants')
+            ->wherePivot('status', ParticipationStatus::ACCEPTED);
+    }
+
+    public function pendingEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'participants')
+            ->wherePivot('status', ParticipationStatus::PENDING);
     }
 }

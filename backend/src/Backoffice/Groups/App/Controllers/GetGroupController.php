@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\App\Controllers;
+namespace IHC\Backoffice\Groups\App\Controllers;
 
-use Lightit\Backoffice\Groups\Domain\Models\Group;
+use IHC\Backoffice\Groups\Domain\Models\Group;
 
 class GetGroupController
 {

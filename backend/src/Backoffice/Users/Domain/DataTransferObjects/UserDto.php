@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Users\Domain\DataTransferObjects;
+namespace IHC\Backoffice\Users\Domain\DataTransferObjects;
 
 class UserDto
 {

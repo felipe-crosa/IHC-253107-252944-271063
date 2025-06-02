@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Authentication\App\Controllers;
+namespace IHC\Authentication\App\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Lightit\Authentication\App\Requests\GoogleLoginRequest;
-use Lightit\Authentication\Domain\Actions\GoogleLoginAction;
+use IHC\Authentication\App\Requests\GoogleLoginRequest;
+use IHC\Authentication\Domain\Actions\GoogleLoginAction;
 
 class GoogleLoginController
 {

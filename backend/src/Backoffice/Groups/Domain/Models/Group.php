@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Lightit\Backoffice\Groups\Domain\Models;
+namespace IHC\Backoffice\Groups\Domain\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Lightit\Backoffice\Users\Domain\Models\User;
+use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
+use IHC\Backoffice\Users\Domain\Models\User;
 
 /**
  * 
@@ -33,17 +35,32 @@ use Lightit\Backoffice\Users\Domain\Models\User;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Group withoutTrashed()
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $users
+ * @property-read int|null $users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $invites
+ * @property-read int|null $invites_count
  * @mixin \Eloquent
  */
 class Group extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'group';
+    protected $table = 'groups';
     protected $guarded = ['id'];
 
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'invites')->wherePivot('status', InviteStatus::ACCEPTED);
+    }
+
+    public function invites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'invites')
+            ->wherePivot('status', InviteStatus::PENDING);
     }
 }

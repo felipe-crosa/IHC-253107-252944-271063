@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', Lightit\Backoffice\Users\Domain\Models\User::class),
+            'model' => env('AUTH_MODEL', IHC\Backoffice\Users\Domain\Models\User::class),
         ],
 
         // 'users' => [
