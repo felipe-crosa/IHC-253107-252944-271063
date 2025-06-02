@@ -13,7 +13,6 @@ export default function Root() {
 
 function RootNavigator() {
   const { isLoggedIn } = useAuth();
-  console.log(isLoggedIn)
 
   return (
     <Stack screenOptions={{
