@@ -9,10 +9,9 @@ import { registerSchema } from './schemas/register.schema';
 import * as authenticationService from './services/authentication.service';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 export default function RegisterScreen() {
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
     const router = useRouter();
 
      const {
@@ -24,7 +23,8 @@ export default function RegisterScreen() {
             defaultValues: {
                 name: '',
                 email_address: '',
-                password: ''
+                password: '',
+                password_confirmation: ''
             }
           });
 
@@ -32,17 +32,23 @@ export default function RegisterScreen() {
     const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
             try {
                 await authenticationService.register(data);
-                setSuccess('Account created successfully!');
                 router.navigate('/login');
             } catch (err: any) {
-                setError(err.message?.data);
+                showMessage({
+                  message: err.message || "An error occurred during register.",
+                  type: "danger",
+                });  
             }
         }
 
   return (
     <>
-    {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
+    <FlashMessage position="top" />
     <SafeAreaView style={styles.container}>
+      <ScrollView 
+            contentContainerStyle={styles.scrollContent}     
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>Join EventBuddy</Text>
       <View style={styles.content}>
         <View style={styles.form}>
@@ -118,14 +124,9 @@ export default function RegisterScreen() {
                 />     
                 {errors.password_confirmation && <Text style={styles.fieldError}>{errors.password_confirmation.message}</Text>}       
             </View>
-            <View>
-                <Pressable style={styles.profileImageBtn}>
-                    <Image
-                        source={require('@/assets/images/profile-placeholder.png')}
-                        style={styles.profileImage} />
-                </Pressable>
-            </View>
-            <View style={styles.registerButtonSection}>
+          
+        </View>
+        <View style={styles.registerButtonSection}>
             <Pressable
             onPress={handleSubmit(onSubmit)}
             style={styles.registerButton}>
@@ -136,8 +137,8 @@ export default function RegisterScreen() {
                 <Link href="/login" style={styles.signInText}>Sign In</Link>
             </View>
         </View>
-        </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
     </>
   );
@@ -146,9 +147,6 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 50,
   },
   title: {
     color: "#8200DB",
@@ -161,8 +159,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    gap: 40,
     paddingHorizontal: 10,
+    flex: 1,
+    gap: 30,
   },
   form: {
     display: 'flex',
@@ -248,5 +247,13 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 12,
     width: '100%',
-  }
+  },
+  scrollContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 30,
+    padding: 20,
+    minWidth: '100%',
+  },
+  
 });

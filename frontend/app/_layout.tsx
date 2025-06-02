@@ -1,32 +1,25 @@
-import { Stack } from 'expo-router';
-import { AuthProvider, useAuth } from './context/useAuth';
-import { SplashScreenController } from './splash/splash';
+import { Slot } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { initializeAxiosInterceptor, useAuthStore } from './context/useAuth';
+import { useEffect } from 'react';
 
-export default function Root() {
+export default function Layout() {
+  useEffect(() => {
+    initializeAxiosInterceptor();
+  }, []);
+
+
   return (
-    <AuthProvider>
-      <SplashScreenController />
-      <RootNavigator />
-    </AuthProvider>
+      <SafeAreaView style={styles.container}>
+        <Slot />
+      </SafeAreaView>
   );
 }
 
-function RootNavigator() {
-  const { isLoggedIn } = useAuth();
-
-  console.log('isLoggedIn', isLoggedIn);
-
-  return (
-    <Stack screenOptions={{
-      headerShown: false, 
-    }}>
-      <Stack.Protected guard={isLoggedIn}>
-        <Stack.Screen name="(app)" />
-      </Stack.Protected>
-
-      <Stack.Protected guard={!isLoggedIn}>
-        <Stack.Screen name="login" />
-      </Stack.Protected>
-    </Stack>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB', 
+  },
+});

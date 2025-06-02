@@ -1,8 +1,26 @@
+import { Group } from '@/app/types/group';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Pressable, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as groupsService from '@/app/services/groups.service';
 
-export default function AlertsScreen() {
+export default function GroupsScreen() {
+  const [groups, setGroups] = useState<Group[]>([]);
+
+  const getGroups = async () => {
+    try {
+      const groups = await groupsService.getAll();
+      setGroups(groups);
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+    }
+  }
+
+  useEffect(() => {
+    getGroups();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.heading}>
@@ -11,6 +29,31 @@ export default function AlertsScreen() {
           <Ionicons size={30} name="add-circle-outline" color={'white'}/>
         </Pressable>
       </View>
+      <View style={styles.searchInput}>
+        <Ionicons size={20} name="search-outline" color={'#99A1AF'} />
+        <TextInput
+          placeholder="Search groups..."
+          placeholderTextColor={'#99A1AF'} 
+          style={styles.searchInputText}/>
+      </View>
+      <ScrollView>
+        {groups.map((group) => (
+          <Pressable
+            key={group.id}
+            onPress={() => console.log(`Navigate to group ${group.id}`)}
+            style={({ pressed }) => ({
+              backgroundColor: pressed ? '#F3F4F6' : 'white',
+              padding: 15,
+              borderRadius: 10,
+              marginVertical: 5,
+            })}
+          >
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>{group.name}</Text>
+            <Text style={{ color: '#6B7280' }}>{group.description}</Text>
+          </Pressable>
+        ))}
+
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -21,6 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     padding: 15,
+    gap: 5,
   },
   heading: {
     display: 'flex',
@@ -36,6 +80,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#8200DB',
     padding: 5,
     borderRadius: 50,
+  },
+  searchInput: {
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#D1D5DC',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  searchInputText: {
+    fontSize: 16,
+    fontWeight: '400',
   }
 
 });

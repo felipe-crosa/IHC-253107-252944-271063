@@ -4,5 +4,5 @@ import axios from '../providers/axios.provider';
 export const getAll = async () => {
     const response = await axios.get(`${baseUrl}`);
 
-    return response.data.data;
+    return response.data;
 }

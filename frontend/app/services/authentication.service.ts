@@ -1,4 +1,4 @@
-import { User } from '../interfaces/user.interface';
+import { User } from '../types/user.interface';
 import axios from '../providers/axios.provider';
 import { RegisterFormData } from '../types/register';
 

@@ -1,9 +1,9 @@
-import { useAuth } from '@/app/context/useAuth';
+import { useAuthStore } from '@/app/context/useAuth';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Redirect, Tabs } from 'expo-router';
 
 export default function TabLayout() {
-    const { isLoggedIn } = useAuth();
+    const { isLoggedIn } = useAuthStore();
   
     if (!isLoggedIn) {
       return <Redirect href="/login" />;

@@ -1,9 +1,9 @@
-import { useAuth } from '@/app/context/useAuth';
+import { useAuthStore } from '@/app/context/useAuth';
 import { StyleSheet, View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AlertsScreen() {
-    const { user } = useAuth();
+    const { user } = useAuthStore();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        paddingTop: 240,
+        paddingTop: 250,
         flex: 1,
     },
     blockHeading: {

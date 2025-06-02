@@ -6,12 +6,12 @@ import { Link, useRouter } from 'expo-router';
 import { LoginFormData } from './types/login';
 import { useState } from 'react';
 import { loginSchema } from './schemas/login.schema';
-import { useAuth } from './context/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import { useAuthStore } from './context/useAuth';
 
 export default function LoginScreen() {
-    const { signIn } = useAuth();
+    const { signIn } = useAuthStore();
     const router = useRouter();
 
     const {
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 50,
+    padding: 20,
   },
   title: {
     color: "#8200DB",
