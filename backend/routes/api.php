@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\Route;
-use Lightit\Backoffice\Users\App\Controllers\{
 use IHC\Authentication\App\Controllers\GoogleLoginController;
 use IHC\Authentication\App\Controllers\LoginController;
 use IHC\Authentication\App\Controllers\LogoutController;
