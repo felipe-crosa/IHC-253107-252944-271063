@@ -10,10 +10,6 @@ interface ErrorAlertProps {
 export const ErrorAlert = ({ message, onClose } : ErrorAlertProps) => {
     return (
         <View style={styles.container}>
-            <Pressable 
-                onPress={onClose}>
-                <AntDesign name="closecircle" size={15} color="#ff6467"/>
-            </Pressable>
             <View style={{ flex: 1 }}>
                 <Text style={styles.errorMessage}>{ message }</Text>
             </View>
@@ -25,15 +21,13 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 20,
-        right: 10,
+        padding: 15,
         backgroundColor: '#fef2f2',
         borderRadius: 10,
-        padding: 15,
-        marginBottom: 10,
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
-        width: 300,
+        width: '100%',
         gap: 10,
     }, 
     errorMessage: {

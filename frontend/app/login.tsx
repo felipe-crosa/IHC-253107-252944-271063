@@ -7,11 +7,10 @@ import { LoginFormData } from './types/login';
 import { useState } from 'react';
 import { loginSchema } from './schemas/login.schema';
 import { useAuth } from './context/useAuth';
-import { ErrorAlert } from '@/components/ErrorAlert';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 
 export default function LoginScreen() {
-    const [error, setError] = useState<string | null>(null);
     const { signIn } = useAuth();
     const router = useRouter();
 
@@ -32,13 +31,16 @@ export default function LoginScreen() {
             await signIn(data);
             router.push('/');
         } catch (err: any) {
-            setError(err.message);
+          showMessage({
+            message: err.message || "An error occurred during login.",
+            type: "danger",
+          });  
         }
     }
 
   return (
     <>
-    {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
+    <FlashMessage position="top" />
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <View style={styles.content}>

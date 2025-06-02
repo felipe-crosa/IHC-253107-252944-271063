@@ -1,8 +1,11 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { useAuth } from '@/app/context/useAuth';
 import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AlertsScreen() {
+  const { signOut } = useAuth();
+
+  // signOut();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.heading}>
