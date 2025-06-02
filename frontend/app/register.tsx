@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Link, Redirect, useRouter } from 'expo-router';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from './schemas/register.schema';
 import * as authenticationService from './services/authentication.service';
 import { ErrorAlert } from '@/components/ErrorAlert';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
     const [error, setError] = useState<string | null>(null);
@@ -41,7 +42,7 @@ export default function RegisterScreen() {
   return (
     <>
     {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Join EventBuddy</Text>
       <View style={styles.content}>
         <View style={styles.form}>
@@ -137,7 +138,7 @@ export default function RegisterScreen() {
         </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
     </>
   );
 }

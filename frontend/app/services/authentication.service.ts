@@ -21,7 +21,7 @@ export const register = async (data: RegisterFormData) : Promise<void> => {
 
 export async function profile() : Promise<User> {
     const response = await axios.get(`${baseUrl}/me`, {});
-    return response.data;
+    return response.data.data;
 }
 
 export const logout = () => {
