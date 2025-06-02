@@ -1,42 +1,31 @@
-import { useFonts } from 'expo-font';
-import { Slot } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { AuthProvider } from './stores/useAuthStore';
+import { Stack } from 'expo-router';
+import { AuthProvider, useAuth } from './context/useAuth';
+import { SplashScreenController } from './splash/splash';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function Root() {
   return (
     <AuthProvider>
-         <View style={styles.container}>
-            <Slot /> 
-        </View>
+      <SplashScreenController />
+      <RootNavigator />
     </AuthProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB', 
-    paddingHorizontal: 25,
-    paddingVertical: 40,
-  },
-});
+function RootNavigator() {
+  const { isLoggedIn } = useAuth();
+  console.log(isLoggedIn)
+
+  return (
+    <Stack screenOptions={{
+      headerShown: false, 
+    }}>
+      <Stack.Protected guard={isLoggedIn}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!isLoggedIn}>
+        <Stack.Screen name="login" />
+      </Stack.Protected>
+    </Stack>
+  );
+}

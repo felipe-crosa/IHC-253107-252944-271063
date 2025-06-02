@@ -1,15 +1,18 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { RegisterFormData } from '../types/register';
+import { RegisterFormData } from './types/register';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema } from '../schemas/register.schema';
-import * as authenticationService from '../services/authentication.service';
+import { registerSchema } from './schemas/register.schema';
+import * as authenticationService from './services/authentication.service';
+import { ErrorAlert } from '@/components/ErrorAlert';
 
 export default function RegisterScreen() {
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const router = useRouter();
 
      const {
             control,
@@ -28,13 +31,16 @@ export default function RegisterScreen() {
     const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
             try {
                 await authenticationService.register(data);
-                console.log('success');
+                setSuccess('Account created successfully!');
+                router.navigate('/login');
             } catch (err: any) {
-                setError(err.message);
+                setError(err.message?.data);
             }
         }
 
   return (
+    <>
+    {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
     <View style={styles.container}>
       <Text style={styles.title}>Join EventBuddy</Text>
       <View style={styles.content}>
@@ -73,7 +79,7 @@ export default function RegisterScreen() {
                     
                     )}
                 />
-                 {errors.email && <Text style={styles.fieldError}>{errors.email.message}</Text>} 
+                 {errors.email_address && <Text style={styles.fieldError}>{errors.email_address.message}</Text>} 
             </View>
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Password</Text>
@@ -92,7 +98,25 @@ export default function RegisterScreen() {
                     )}
                 />     
                 {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}       
-                </View>
+            </View>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Confirm Password</Text>
+                <Controller
+                    control={control}
+                    name="password_confirmation"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                        style={styles.inputValue}
+                        placeholder="*******"
+                        placeholderTextColor="#99A1AF"
+                        secureTextEntry
+                        onChangeText={onChange}
+                        value={value}
+                        />
+                    )}
+                />     
+                {errors.password_confirmation && <Text style={styles.fieldError}>{errors.password_confirmation.message}</Text>}       
+            </View>
             <View>
                 <Pressable style={styles.profileImageBtn}>
                     <Image
@@ -114,6 +138,7 @@ export default function RegisterScreen() {
         </View>
       </View>
     </View>
+    </>
   );
 }
 

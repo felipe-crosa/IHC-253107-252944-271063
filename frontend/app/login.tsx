@@ -2,15 +2,18 @@ import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
-import { LoginFormData } from '../types/login';
+import { Link, useRouter } from 'expo-router';
+import { LoginFormData } from './types/login';
 import { useState } from 'react';
-import { loginSchema } from '../schemas/login.schema';
-import { useAuth } from '../stores/useAuthStore';
+import { loginSchema } from './schemas/login.schema';
+import { useAuth } from './context/useAuth';
+import { ErrorAlert } from '@/components/ErrorAlert';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
     const [error, setError] = useState<string | null>(null);
-    const { login } = useAuth();
+    const { signIn } = useAuth();
+    const router = useRouter();
 
     const {
         control,
@@ -24,17 +27,19 @@ export default function LoginScreen() {
         }
       });
 
-    const onSubmit: SubmitHandler<LoginFormData> = async ({ email, password }) => {
+    const onSubmit: SubmitHandler<LoginFormData> = async (data) => {
         try {
-            await login(email, password);
-            console.log('success');
+            await signIn(data);
+            router.push('/');
         } catch (err: any) {
             setError(err.message);
         }
     }
 
   return (
-    <View style={styles.container}>
+    <>
+    {error && <ErrorAlert message={error} onClose={() => setError(null)} />}
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Welcome Back</Text>
       <View style={styles.content}>
         <View style={styles.form}>
@@ -100,7 +105,8 @@ export default function LoginScreen() {
             </View>
           </View>
       </View>
-    </View>
+    </SafeAreaView>
+    </>
   );
 }
 
