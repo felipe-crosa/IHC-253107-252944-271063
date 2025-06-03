@@ -8,6 +8,7 @@ export interface Group {
     description: string;
     owner_id: number;
     invites: User[];
+    created_at: string;
 }
 
 export type CreateGroupFormData = z.infer<typeof createGroupSchema>;

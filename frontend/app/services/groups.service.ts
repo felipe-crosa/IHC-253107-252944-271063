@@ -13,6 +13,12 @@ export const create = async (data: CreateGroupFormData) : Promise<Group> => {
         ...data
     });
 
-    return response.data.data;
+    return response.data;
 
+}
+
+export const getById = async (id: string) : Promise<Group> => {
+    const response = await axios.get(`${baseUrl}/${id}`);
+
+    return response.data;
 }

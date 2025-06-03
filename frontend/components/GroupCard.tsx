@@ -1,23 +1,19 @@
 import { Group } from "@/app/types/group";
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { getInitials } from "@/helpers/format-text.helper";
 
 interface GroupCardProps {
     group: Group;
 }
 
 export const GroupCard = ({ group } : GroupCardProps) => {
-    function getInitials(name: string): string {
-        return name
-          .split(' ')
-          .map(word => word[0])
-          .join('')
-          .toUpperCase();
-      }
+    const router = useRouter();
       
     return (
         <Pressable
-            onPress={() => console.log(`Navigate to group ${group.id}`)}
+            onPress={() => router.push(`/groups/${group.id}`)}
             style={styles.container}
                   >
                 <View style={styles.groupInfo}>

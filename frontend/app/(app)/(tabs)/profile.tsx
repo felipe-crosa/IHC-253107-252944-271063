@@ -1,12 +1,11 @@
 import { useAuthStore } from '@/app/context/useAuth';
 import { StyleSheet, View, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AlertsScreen() {
     const { user } = useAuthStore();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
         <View style={styles.blockHeading}/>
         <View style={styles.profileImage}>
             <Text style={styles.profileImageText}>JD</Text>
@@ -15,7 +14,7 @@ export default function AlertsScreen() {
             <Text style={styles.userNameLbl}>{user!.name}</Text>
             <Text style={styles.userEmailLbl}>{user!.email}</Text>
         </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
