@@ -1,13 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
-import { Image } from 'expo-image';
-import { Link, Redirect, useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useState } from 'react';
 import { RegisterFormData } from './types/register';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from './schemas/register.schema';
 import * as authenticationService from './services/authentication.service';
-import { ErrorAlert } from '@/components/ErrorAlert';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 

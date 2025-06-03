@@ -1,12 +1,12 @@
 import { Slot } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
-import { initializeAxiosInterceptor, useAuthStore } from './context/useAuth';
 import { useEffect } from 'react';
+import { useAuthStore } from './context/useAuth';
 
 export default function Layout() {
   useEffect(() => {
-    initializeAxiosInterceptor();
+    useAuthStore.getState().initialize();
   }, []);
 
 
@@ -23,3 +23,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB', 
   },
 });
+
+
