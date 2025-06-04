@@ -36,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="create"
+        name="create-event"
         options={{
           title: 'Create',
           tabBarIcon: ({ color }) => <Ionicons size={23} name="add-circle-outline" color={color} />

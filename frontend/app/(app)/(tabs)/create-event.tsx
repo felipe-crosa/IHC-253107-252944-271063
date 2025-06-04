@@ -1,0 +1,241 @@
+import { CreateEventFormData } from '@/app/types/event';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-native';
+import { createEventSchema } from '@/app/schemas/create-event.schema';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { DateTime } from '@/components/custom/DateTime';
+import { useRouter } from 'expo-router';
+
+export default function CreateEventScreen() {
+    const router = useRouter();
+    
+    const {
+            control,
+            handleSubmit,
+            formState: { errors },
+        } = useForm<CreateEventFormData>({
+            resolver: zodResolver(createEventSchema),
+            defaultValues: {
+                title: '',
+                description: '',
+                start_at: new Date(),
+                location: '',
+                group_id: 0,
+                category_id: 0,
+            }
+        });
+        
+  return (
+    <View style={styles.container}>
+        <View style={styles.header}> 
+            <Text style={styles.title}>Create Event</Text>
+            <View style={styles.stages}>
+                <View style={styles.currentStage} />
+                <View style={styles.stage} />
+                <View style={styles.stage} />
+            </View>
+        </View>
+        <ScrollView>
+            <View style={styles.form}>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Title</Text>
+                <Controller
+                    control={control}
+                    name="title"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                            style={styles.inputValue}
+                            placeholder="Give your event a name"
+                            placeholderTextColor="#99A1AF"
+                            onChangeText={onChange}
+                            value={value}
+                        />
+                            
+                    )}
+                />
+                {errors.title && <Text style={styles.fieldError}>{errors.title.message}</Text>}
+            </View>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Date & Time</Text>
+                <Controller
+                    control={control}
+                    name="start_at"
+                    render={({ field: { onChange, value } }) => (
+                        <DateTime
+                            value={value}
+                            onChange={onChange}
+                            placeholder="Select event date & time"
+                            style={styles.inputValue}
+                        />
+                    )}
+                />
+                {errors.start_at && <Text style={styles.fieldError}>{errors.start_at.message}</Text>}
+            </View>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Category</Text>
+                <Controller
+                    control={control}
+                    name="title"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                            style={styles.inputValue}
+                            placeholder="Give your event a name"
+                            placeholderTextColor="#99A1AF"
+                            onChangeText={onChange}
+                            value={value}
+                        />   
+                    )}
+                />
+                {errors.title && <Text style={styles.fieldError}>{errors.title.message}</Text>}
+            </View>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Description</Text>
+                <Controller
+                    control={control}
+                    name="description"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                            style={styles.inputTextArea}
+                            placeholder="Tell people what this event is about..."
+                            placeholderTextColor="#99A1AF"
+                            multiline = {true}
+                            numberOfLines = {6}
+                            onChangeText={onChange}
+                            value={value}
+                        />
+                                    
+                    )}
+                />
+                {errors.description && <Text style={styles.fieldError}>{errors.description.message}</Text>}
+            </View>
+            <View style={styles.input}>
+                <Text style={styles.inputLabel}>Location</Text>
+                <Controller
+                    control={control}
+                    name="location"
+                    render={({ field: { onChange, value }}) => (
+                        <TextInput
+                            style={styles.inputValue}
+                            placeholder="Add a location"
+                            placeholderTextColor="#99A1AF"
+                            onChangeText={onChange}
+                            value={value}
+                        />   
+                    )}
+                />
+                {errors.location && <Text style={styles.fieldError}>{errors.location.message}</Text>}
+            </View>
+        </View>
+        <Pressable style={styles.button} onPress={() => router.push('/select-group')}>
+            <Text style={styles.buttonText}>Next: Select Group</Text>
+        </Pressable>
+
+        </ScrollView>
+    
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        padding: 15,
+        width: '100%',
+        gap: 20,
+    },
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    title: {
+        fontSize: 32,
+        fontWeight: '700',
+    },
+    backButton: {
+        padding: 10,
+        borderRadius: 50,
+        backgroundColor: '#F3F4F6',
+    },
+    stages: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
+    },
+    stage: {
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#D9D9D9',
+    }, 
+    currentStage: {
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#8200DB',
+    },
+
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        gap: 20,
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+    },
+    input: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        width: '100%',
+        gap: 10,
+      },
+      inputLabel: {
+        color: '#1F2937',
+        fontWeight: '600',
+        fontSize: 14,
+        width: '100%',
+      },
+      inputValue: {
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#D1D5DC',
+        borderRadius: 15,
+        width: '100%',
+      },
+      inputTextArea: {
+        padding: 15,
+        borderWidth: 1,
+        borderColor: '#D1D5DC',
+        borderRadius: 15,
+        width: '100%',
+        minHeight: 100,
+      },
+      fieldError: {
+        color: 'red',
+        fontSize: 12,
+        width: '100%',
+      },
+      button: {
+        marginTop: 20, 
+        backgroundColor: '#8200DB',
+        padding: 15,
+        borderRadius: 15,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '600',
+      },
+
+});

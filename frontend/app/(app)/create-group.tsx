@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
       cancelBtn: {
         backgroundColor: 'white',
         width: '45%',
-        paddingVertical: 20,
+        paddingVertical: 15,
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#D1D5DC',
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
       submitBtn: {
         backgroundColor: '#8200DB',
         width: '50%',
-        paddingVertical: 20,
+        paddingVertical: 15,
         borderRadius: 10,
         alignItems: 'center',
       },

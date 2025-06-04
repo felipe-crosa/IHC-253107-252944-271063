@@ -1,6 +1,7 @@
-const baseUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/groups`
 import axios from '../providers/axios.provider';
 import { CreateGroupFormData, Group } from '../types/group';
+
+const baseUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/groups`
 
 export const getAll = async () => {
     const response = await axios.get(`${baseUrl}`);
