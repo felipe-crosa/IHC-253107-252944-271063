@@ -29,6 +29,7 @@ use IHC\Backoffice\Groups\App\Controllers\UpdateGroupController;
 use IHC\Backoffice\Invites\App\Controllers\AcceptInviteController;
 use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;
+use IHC\Backoffice\Messages\App\Controllers\CreateMessageController;
 use IHC\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -90,6 +91,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{event}', DeleteEventController::class);
         Route::post('/{event}/accept', ConfirmEventController::class);
         Route::post('/{event}/reject', RejectEventController::class);
+
+        Route::post('/{event}/messages', CreateMessageController::class);
+        Route::post('/{event}/images');
+        Route::post('/{event}/polls');
     });
 
 });
