@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace IHC\Backoffice\Groups\Domain\Models;
 
+use IHC\Backoffice\Events\Domain\Models\Event;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
 use IHC\Backoffice\Users\Domain\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $name
@@ -62,5 +64,10 @@ class Group extends Model
     {
         return $this->belongsToMany(User::class, 'invites')
             ->wherePivot('status', InviteStatus::PENDING);
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
     }
 }

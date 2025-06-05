@@ -13,10 +13,10 @@ class InviteUserController
 {
     public function __invoke(Group $group, InviteUserRequest $request, InviteUserAction $inviteUserAction): JsonResponse
     {
-        $invite = $inviteUserAction->execute($group, (string) $request->string(InviteUserRequest::EMAIL));
+        $inviteUserAction->execute($group, (string) $request->string(InviteUserRequest::EMAIL));
 
         return response()->json([
-            'data' => $invite,
+            'message' => 'User invited successfully',
         ]);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IHC\Backoffice\Events\Domain\Models;
 
 use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
+use IHC\Backoffice\Images\Domain\Models\Image;
 use IHC\Backoffice\Messages\Domain\Models\Message;
 use IHC\Backoffice\Users\Domain\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property string $title
@@ -52,7 +53,7 @@ class Event extends Model
 {
     public function category(): BelongsTo
     {
-        return $this->belongsTo('categories');
+        return $this->belongsTo(Category::class);
     }
 
     public function confirmedAttendees(): BelongsToMany
@@ -82,5 +83,10 @@ class Event extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
     }
 }
