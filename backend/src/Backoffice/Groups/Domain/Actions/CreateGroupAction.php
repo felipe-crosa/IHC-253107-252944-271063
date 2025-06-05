@@ -22,6 +22,8 @@ class CreateGroupAction
 
         $group->users()->attach($user, ['status' => InviteStatus::ACCEPTED]);
 
+        $group->loadCount('users');
+
         return $group;
     }
 }

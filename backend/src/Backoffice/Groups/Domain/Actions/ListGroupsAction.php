@@ -14,6 +14,6 @@ class ListGroupsAction
      */
     public function execute(User $user): Collection
     {
-        return $user->groups;
+        return $user->groups()->withCount('users')->get();
     }
 }
