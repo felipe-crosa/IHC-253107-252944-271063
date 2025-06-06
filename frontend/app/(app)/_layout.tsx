@@ -1,5 +1,5 @@
 import { Slot, Redirect } from 'expo-router';
-import { useAuthStore } from '../context/useAuth';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function ProtectedLayout() {
   const { isLoggedIn } = useAuthStore();

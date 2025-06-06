@@ -1,28 +1,28 @@
 import { z } from 'zod';
 
-export const Category = {
-    SOCIAL: 'social',
-    SPORTS: 'sports',
-    FOOD: 'food',
-    MUSIC: 'music',
-    TRAVEL: 'travel',
-    MOVIES: 'movies',
-    GAMES: 'games',
-    OTHER: 'other',
-} as const;
-
-export type Category = (typeof Category)[keyof typeof Category];
-
-export const categorySchema = z.nativeEnum(Category);
-
-export const createEventSchema = z.object({
+export const createEventStep1Schema = z.object({
     title: z.string().min(1, { message: 'Event name is required' }),
     description: z.string().min(1, { message: 'Event description is required' }),
-    start_at: z.date().refine(date => date > new Date(), {
-        message: 'Event start date must be in the future',
-    }),
-    category: categorySchema,
-    location: z.string().min(1, { message: 'Event description is required' }),
-    group_id: z.number().min(1, { message: 'Group ID is required' }),
-    category_id: z.number().min(1, { message: 'Category ID is required' }),
+    start_at: z.date().nullable(),
+    category_id: z.number(),
+    location: z.string(),
 });
+
+// export const createEventStep1Schema = z.object({
+//     title: z.string().min(1, { message: 'Event name is required' }),
+//     description: z.string().min(1, { message: 'Event description is required' }),
+//     start_at: z.date().refine(date => date > new Date(), {
+//         message: 'Event start date must be in the future',
+//     }),
+//     category_id: z.number().min(1, { message: 'Category ID is required' }),
+//     location: z.string().min(1, { message: 'Event description is required' }),
+// });
+  
+export const createEventStep2Schema = z.object({
+    group_id: z.number().min(1, { message: 'Group ID is required' }),
+});
+
+export const createEventSchema = createEventStep1Schema
+  .merge(createEventStep2Schema);
+
+  

@@ -1,19 +1,21 @@
-import { CreateEventFormData } from '@/app/types/event';
+import { CreateEventStep2Data } from '@/app/types/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-native';
-import { createEventSchema } from '@/app/schemas/create-event.schema';
+import { createEventStep2Schema } from '@/app/schemas/create-event.schema';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Group } from '../../types/group';
 import { useEffect, useState } from 'react';
 import * as groupsService from '../../services/groups.service';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
-import { GroupCard } from '@/components/custom/GroupCard';
+import { useEventStore } from '@/app/stores/useEventStore';
+import { GroupSelect } from '@/components/custom/GroupSelect';
 
 export default function SelectGroupScreen() {
     const router = useRouter();
     const [groups, setGroups] = useState<Group[]>([]);
+    const { updateEventData, nextStep, prevStep, eventData } = useEventStore();
 
     const getGroups = async () => {
         try {
@@ -35,17 +37,22 @@ export default function SelectGroupScreen() {
             control,
             handleSubmit,
             formState: { errors },
-        } = useForm<CreateEventFormData>({
-            resolver: zodResolver(createEventSchema),
-            defaultValues: {
-                title: '',
-                description: '',
-                start_at: new Date(),
-                location: '',
-                group_id: 0,
-                category_id: 0,
-            }
+        } = useForm<CreateEventStep2Data>({
+            resolver: zodResolver(createEventStep2Schema),
+            defaultValues: { group_id: eventData.group_id }
         });
+    
+    const handleGoBack = () => {
+        updateEventData({ group_id: 0 });
+        prevStep();
+        router.push('/create-event');
+    }
+
+    const onSubmit = async (data: CreateEventStep2Data) => {
+        updateEventData(data);
+        nextStep();
+        router.push('/preview-event');
+    }
         
   return (
     <>
@@ -53,7 +60,7 @@ export default function SelectGroupScreen() {
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.heading}>
-                    <Pressable onPress={() => router.push('/create-event')} style={styles.backButton}>
+                    <Pressable onPress={() => handleGoBack()} style={styles.backButton}>
                         <Ionicons size={20} name="chevron-back-outline" color={'black'} />
                     </Pressable>
                     <Text style={styles.title}>Select Group</Text>
@@ -72,14 +79,20 @@ export default function SelectGroupScreen() {
             placeholderTextColor={'#99A1AF'} 
             style={styles.searchInputText}/>
         </View>
-        <ScrollView>
+        <View>
             <View style={styles.form}>
-                <View style={styles.groups}>
-                    {groups.map((group) => (
-                        <GroupCard key={group.id} group={group} />))}
+                <View>
+                    <Controller
+                        control={control}
+                        name="group_id"
+                        render={({ field }) => (
+                            <GroupSelect groups={groups} {...field}/>
+
+                        )} />
                 </View>
+                {errors.group_id && <Text style={styles.fieldError}>{errors.group_id.message}</Text>}
             </View>
-            <Pressable onPress={() => router.push('/create-event')} style={styles.button}>
+            <Pressable onPress={() => router.push('/create-group')} style={styles.button}>
                 <Text style={styles.buttonText}>+ Create New Group</Text>
             </Pressable>
              <View style={styles.actions}>
@@ -89,12 +102,12 @@ export default function SelectGroupScreen() {
                     <Text style={styles.cancelLbl}>Cancel</Text>
                 </Pressable>
                 <Pressable
-                    onPress={() => router.push('/preview-event')}
+                    onPress={handleSubmit(onSubmit)}
                     style={styles.submitBtn} >
                     <Text style={styles.createLbl}>Next: Preview</Text>
                 </Pressable>
             </View>
-        </ScrollView>
+        </View>
     
     </View>
     </>
@@ -171,7 +184,7 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 20,
         backgroundColor: 'white',
-        padding: 20,
+        padding: 7,
         borderRadius: 10,
     },
       fieldError: {

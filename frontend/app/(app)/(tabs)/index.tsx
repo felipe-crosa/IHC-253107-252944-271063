@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/app/context/useAuth';
+import { useAuthStore } from '@/app/stores/useAuthStore';
 import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

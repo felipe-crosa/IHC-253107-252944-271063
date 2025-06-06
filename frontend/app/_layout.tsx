@@ -2,7 +2,7 @@ import { Slot } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native';
 import { useEffect } from 'react';
-import { useAuthStore } from './context/useAuth';
+import { useAuthStore } from './stores/useAuthStore';
 
 export default function Layout() {
   useEffect(() => {

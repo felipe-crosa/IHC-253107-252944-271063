@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/app/context/useAuth';
+import { useAuthStore } from '@/app/stores/useAuthStore';
 import { StyleSheet, View, Text } from 'react-native';
 
 export default function AlertsScreen() {

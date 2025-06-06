@@ -1,30 +1,30 @@
-import { CreateEventFormData } from '@/app/types/event';
+import { CreateEventStep1Data } from '@/app/types/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-native';
-import { createEventSchema } from '@/app/schemas/create-event.schema';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { createEventStep1Schema } from '@/app/schemas/create-event.schema';
 import { DateTime } from '@/components/custom/DateTime';
 import { useRouter } from 'expo-router';
+import { useEventStore } from '@/app/stores/useEventStore';
 
 export default function CreateEventScreen() {
     const router = useRouter();
+    const { updateEventData, nextStep, eventData } = useEventStore();
     
     const {
             control,
             handleSubmit,
             formState: { errors },
-        } = useForm<CreateEventFormData>({
-            resolver: zodResolver(createEventSchema),
-            defaultValues: {
-                title: '',
-                description: '',
-                start_at: new Date(),
-                location: '',
-                group_id: 0,
-                category_id: 0,
-            }
-        });
+        } = useForm<CreateEventStep1Data>({
+            resolver: zodResolver(createEventStep1Schema),
+            defaultValues: eventData
+    });
+    
+    const onSubmit = async (data: CreateEventStep1Data) => {
+        updateEventData(data);
+        nextStep();
+        router.push('/select-group');
+    }
         
   return (
     <View style={styles.container}>
@@ -76,18 +76,18 @@ export default function CreateEventScreen() {
                 <Text style={styles.inputLabel}>Category</Text>
                 <Controller
                     control={control}
-                    name="title"
+                    name="category_id"
                     render={({ field: { onChange, value }}) => (
                         <TextInput
                             style={styles.inputValue}
-                            placeholder="Give your event a name"
+                            placeholder="Choose a category"
                             placeholderTextColor="#99A1AF"
                             onChangeText={onChange}
-                            value={value}
+                            value={value.toString()}
                         />   
                     )}
                 />
-                {errors.title && <Text style={styles.fieldError}>{errors.title.message}</Text>}
+                {errors.category_id && <Text style={styles.fieldError}>{errors.category_id.message}</Text>}
             </View>
             <View style={styles.input}>
                 <Text style={styles.inputLabel}>Description</Text>
@@ -127,7 +127,7 @@ export default function CreateEventScreen() {
                 {errors.location && <Text style={styles.fieldError}>{errors.location.message}</Text>}
             </View>
         </View>
-        <Pressable style={styles.button} onPress={() => router.push('/select-group')}>
+        <Pressable style={styles.button} onPress={handleSubmit(onSubmit)}>
             <Text style={styles.buttonText}>Next: Select Group</Text>
         </Pressable>
 
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         width: '100%',
         gap: 20,
         backgroundColor: 'white',
-        padding: 20,
+        padding: 10,
         borderRadius: 10,
     },
     input: {

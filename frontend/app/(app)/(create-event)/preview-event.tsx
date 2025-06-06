@@ -1,51 +1,37 @@
-import { CreateEventFormData } from '@/app/types/event';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-native';
-import { createEventSchema } from '@/app/schemas/create-event.schema';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Group } from '../../types/group';
-import { useEffect, useState } from 'react';
-import * as groupsService from '../../services/groups.service';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
-import { GroupCard } from '@/components/custom/GroupCard';
+import { useEventStore } from '@/app/stores/useEventStore';
 
 export default function SelectGroupScreen() {
     const router = useRouter();
-    const [groups, setGroups] = useState<Group[]>([]);
+    const { prevStep, setCurrentStep, eventData, submitEvent } = useEventStore();
 
-    const getGroups = async () => {
+    const { title, description, start_at, location, group_id, category_id } = eventData;
+
+    const handleGoBack = () => {
+        prevStep();
+        router.push('/select-group');
+    }
+
+    const handleCancel = () => {
+        setCurrentStep(1);
+        router.push('/create-event');
+    }
+
+    const handleSubmit = async () => {
         try {
-            const groups = await groupsService.getAll();
-            setGroups(groups);
+          await submitEvent();
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while fetching groups.",
+                message: error.message || "An error occurred while creating the event.",
                 type: "danger",
             });
         }
     }
 
-    useEffect(() => {
-        getGroups();
-    }, []);
 
-    const {
-            control,
-            handleSubmit,
-            formState: { errors },
-        } = useForm<CreateEventFormData>({
-            resolver: zodResolver(createEventSchema),
-            defaultValues: {
-                title: '',
-                description: '',
-                start_at: new Date(),
-                location: '',
-                group_id: 0,
-                category_id: 0,
-            }
-        });
         
   return (
     <>
@@ -53,7 +39,7 @@ export default function SelectGroupScreen() {
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.heading}>
-                    <Pressable onPress={() => router.push('/create-event')} style={styles.backButton}>
+                    <Pressable onPress={() => handleGoBack()} style={styles.backButton}>
                         <Ionicons size={20} name="chevron-back-outline" color={'black'} />
                     </Pressable>
                     <Text style={styles.title}>Preview Event</Text>
@@ -66,17 +52,40 @@ export default function SelectGroupScreen() {
         </View>
     
         <ScrollView>
-            <View style={styles.form}>
-              
+            <View style={styles.content}>
+              <View style={styles.contentHeader}>
+                <View style={styles.contentHeaderDetails}>
+                  <Text style={styles.eventTitle}>{ title }</Text>
+                  <Text style={styles.eventDate}> { start_at?.toLocaleDateString() } </Text>
+                </View>
+                <View style={styles.eventCategoryWrapper}>
+                  <Text style={styles.eventCategory}>{category_id}</Text>
+                </View>
+              </View>
+              <View style={styles.groupInfo}>
+                <Text style={styles.description}>{ description }</Text>
+                <View style={styles.location}>
+                  <Ionicons name="location-outline" size={24} color="#364153" />
+                  <Text style={styles.locationText}>{ location }</Text>
+                </View>
+                <View style={styles.group}>
+                  <Ionicons name="people-outline" size={24} color="#364153" />
+                  <Text style={styles.groupName}>{ group_id }</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.warningSection}>
+                <Text style={styles.warningText}>This is how your event will appear to group members.</Text>
+                <Text style={styles.warningDescription}>Members will receive a notification and can accept or decline your invitation. You'll need to confirm the event once enough people have accepted.</Text>
             </View>
              <View style={styles.actions}>
                 <Pressable
-                    onPress={() => router.push('/groups')}
+                    onPress={() => handleCancel()}
                     style={styles.cancelBtn}>
                     <Text style={styles.cancelLbl}>Cancel</Text>
                 </Pressable>
                 <Pressable
-                    onPress={() => router.push('/preview-event')}
+                    onPress={() => handleSubmit()}
                     style={styles.submitBtn} >
                     <Text style={styles.createLbl}>Next: Preview</Text>
                 </Pressable>
@@ -152,41 +161,108 @@ const styles = StyleSheet.create({
         borderRadius: '50%',
         backgroundColor: '#8200DB',
     },
-    form: {
+    content: {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
         gap: 20,
         backgroundColor: 'white',
-        padding: 20,
         borderRadius: 10,
+        paddingBottom: 15,
     },
-      fieldError: {
-        color: 'red',
-        fontSize: 12,
-        width: '100%',
-      },
-      button: {
-        marginTop: 20, 
-        borderColor: '#8200DB',
-        borderWidth: 1,
-        padding: 15,
-        borderRadius: 15,
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      buttonText: {
-        color: '#8200DB',
-        fontSize: 16,
-        fontWeight: '500',
-      },
-      groups: {
+    contentHeader: {
         display: 'flex',
         flexDirection: 'column',
-        gap: 10,
-        width: '100%',
-      },
+        gap: 15,
+        backgroundColor: '#8200DB',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        padding: 15,
+    },
+    contentHeaderDetails: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 5,
+    },
+    eventTitle: {
+        fontSize: 24,
+        fontWeight: '700',
+        color: 'white',
+    },
+    eventDate: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: 'white',
+    },
+    eventCategoryWrapper: {
+      alignSelf: 'flex-start',
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      borderRadius: 15,
+    },
+    eventCategory: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: 'white',
+    },
+    groupInfo: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 20,
+        paddingHorizontal: 15,
+    },
+    description: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#364153',
+        lineHeight: 25,
+    },
+    location: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
+    },
+    locationText: {
+        fontSize: 15,
+        fontWeight: '500',
+        color: '#364153',
+    },
+    group: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+    },
+    groupName: {
+        fontSize: 15,
+        fontWeight: '500',
+        color: '#364153',
+    },
+    warningSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F3F4F6',
+        padding: 15,
+        borderRadius: 10,
+        gap: 5,
+        marginTop: 20,
+    },
+    warningText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: 'black',
+        lineHeight: 25,
+    },
+    warningDescription: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: '#6A7282',
+        marginTop: 5,
+    },
       actions: {
         display: 'flex',
         flexDirection: 'row',

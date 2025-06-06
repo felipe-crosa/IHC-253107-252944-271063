@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { loginSchema } from './schemas/login.schema';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
-import { useAuthStore } from './context/useAuth';
+import { useAuthStore } from './stores/useAuthStore';
 
 export default function LoginScreen() {
     const { signIn } = useAuthStore();
