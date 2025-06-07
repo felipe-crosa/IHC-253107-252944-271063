@@ -19,7 +19,7 @@ const defaultValues: CreateEventFormData = {
     start_at: new Date(),
     location: '',
     group_id: 0,
-    category_id: 0,
+    category_id: '',
 }
 
 export const useEventStore = create<EventStore>()((set, get) => ({

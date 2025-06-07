@@ -9,6 +9,7 @@ export default function SelectGroupScreen() {
     const { prevStep, setCurrentStep, eventData, submitEvent } = useEventStore();
 
     const { title, description, start_at, location, group_id, category_id } = eventData;
+    console.log(start_at)
 
     const handleGoBack = () => {
         prevStep();
@@ -31,8 +32,19 @@ export default function SelectGroupScreen() {
         }
     }
 
+    const formatDate = (date: Date) : string => {
+        return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      })
+    }
 
-        
+
+  
   return (
     <>
     <FlashMessage position="top" />
@@ -56,7 +68,7 @@ export default function SelectGroupScreen() {
               <View style={styles.contentHeader}>
                 <View style={styles.contentHeaderDetails}>
                   <Text style={styles.eventTitle}>{ title }</Text>
-                  <Text style={styles.eventDate}> { start_at?.toLocaleDateString() } </Text>
+                  <Text style={styles.eventDate}> { formatDate(start_at) } </Text>
                 </View>
                 <View style={styles.eventCategoryWrapper}>
                   <Text style={styles.eventCategory}>{category_id}</Text>

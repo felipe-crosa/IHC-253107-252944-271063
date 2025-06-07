@@ -25,22 +25,32 @@ export const DateTime = ({
 }: DateTimeProps) => {
 
   const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (selectedDate && value) {
-      const updated = new Date(value);
-      updated.setFullYear(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
-      onChange(updated);
-    } else if (selectedDate) {
-      onChange(selectedDate);
+    if (selectedDate) {
+      if (value) {
+        // If we already have a value, preserve the time
+        const updated = new Date(selectedDate);
+        updated.setHours(value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
+        onChange(updated);
+      } else {
+        // If no existing value, use the selected date with current time
+        onChange(selectedDate);
+      }
     }
   };
 
   const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
-    if (selectedTime && value) {
-      const updated = new Date(value);
-      updated.setHours(selectedTime.getHours(), selectedTime.getMinutes());
-      onChange(updated);
-    } else if (selectedTime) {
-      onChange(selectedTime);
+    if (selectedTime) {
+      if (value) {
+        // If we have an existing value, preserve the date and update time
+        const updated = new Date(value);
+        updated.setHours(selectedTime.getHours(), selectedTime.getMinutes(), selectedTime.getSeconds(), selectedTime.getMilliseconds());
+        onChange(updated);
+      } else {
+        // If no existing value, use today's date with selected time
+        const updated = new Date();
+        updated.setHours(selectedTime.getHours(), selectedTime.getMinutes(), selectedTime.getSeconds(), selectedTime.getMilliseconds());
+        onChange(updated);
+      }
     }
   };
 
