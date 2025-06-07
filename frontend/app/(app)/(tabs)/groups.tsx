@@ -30,7 +30,6 @@ export default function GroupsScreen() {
   const getInvites = async () => {
     try {
       const invites = await invitesService.getAll();
-      console.log(invites);
       setInvites(invites);
     } catch (error: any) {
       showMessage({
@@ -73,7 +72,7 @@ export default function GroupsScreen() {
           <Text style={styles.invitationTitle}>Invitations</Text>
           <View style={styles.invitationCards}>
             {invites.length > 0 && invites.map((invite) => (
-              <InviteCard key={invite.id} invite={invite} />
+              <InviteCard key={`${invite.id}-invite`} invite={invite} />
             ))}
           </View>
         </View>
