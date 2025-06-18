@@ -3,14 +3,25 @@ import { formatShortDate, getInitials } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Text, View, StyleSheet, Pressable, TouchableOpacity, ScrollView } from "react-native";
 import * as groupsService from "@/app/services/groups.service";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { GroupDetailEventsTab } from "@/components/custom/GroupDetailEventsTab";
+import { GroupDetailMembersTab } from "@/components/custom/GroupDetailMembersTab";
+import { Event } from "@/app/types/event";
+
+const TABS = {
+    Events: 'Events',
+    Members: 'Members',
+} as const;
+
+type Tabs = (typeof TABS)[keyof typeof TABS];
 
 export default function GroupDetailsPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
     const [group, setGroup] = useState<Group | null>(null);
+    const [activeTab, setActiveTab] = useState<Tabs>(TABS.Events);
 
     const getGroup = async (id: string) => {
         try {
@@ -28,6 +39,61 @@ export default function GroupDetailsPage() {
     useEffect(() => {
         getGroup(id as string);
     }, [id]);
+
+    const mockEvents: Event[] = [
+        {
+            id: 1,
+            title: 'Beach Day',
+            description: 'Fun day at the beach with games and BBQ',
+            start_at: new Date(Date.now() + 24 * 60 * 60 * 1000), 
+            location: 'Santa Monica Beach',
+            group_id: parseInt(id as string),
+            category_id: 1,
+        },
+        {
+            id: 2,
+            title: 'Game Night',
+            description: 'Board games and video games night',
+            start_at: new Date('2024-05-15T19:00:00'), // May 15, 7:00 PM
+            location: 'Community Center',
+            group_id: parseInt(id as string),
+            category_id: 2,
+        },
+        {
+            id: 3,
+            title: 'Hiking Trip',
+            description: 'Morning hike through the mountains',
+            start_at: new Date('2024-04-22T09:00:00'), // Past event
+            location: 'Mountain Trail',
+            group_id: parseInt(id as string),
+            category_id: 3,
+        },
+        {
+            id: 4,
+            title: 'Movie Marathon',
+            description: 'Classic movie night with popcorn',
+            start_at: new Date('2024-03-15T18:00:00'), // Past event
+            location: 'Downtown Cinema',
+            group_id: parseInt(id as string),
+            category_id: 4,
+        },
+    ];
+
+    const isUpcomingEvent = (event: Event): boolean => {
+        return new Date(event.start_at) > new Date();
+    };
+
+    const getUpcomingEvents = (): Event[] => {
+        return mockEvents.filter(isUpcomingEvent).sort((a, b) => 
+            new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
+        );
+    };
+
+    const getPastEvents = (): Event[] => {
+        return mockEvents.filter(event => !isUpcomingEvent(event)).sort((a, b) => 
+            new Date(b.start_at).getTime() - new Date(a.start_at).getTime()
+        );
+    };
 
     if (!id || !group) {
         return <Text>Loading...</Text>;
@@ -52,9 +118,49 @@ export default function GroupDetailsPage() {
                         <Text style={styles.groupName}>{ group.name }</Text>
                         <Text style={styles.groupDetailsLbl}>Created { formatShortDate(group.created_at) }</Text>
                     </View>
-
                 </View>
             </View>
+            <View style={styles.containerBody}>
+                <ScrollView style={styles.tabs}>
+                    <View style={styles.tabContainer}>
+                        <Pressable
+                            style={[styles.tab, activeTab === TABS.Events && styles.activeTab]}
+                            onPress={() => setActiveTab(TABS.Events)}>
+                                <Text style={[styles.tabText, activeTab === TABS.Events && styles.activeTabText]}>
+                                    Events
+                                </Text>
+                        </Pressable>
+                        <Pressable
+                                style={[styles.tab, activeTab === TABS.Members && styles.activeTab]}
+                                onPress={() => setActiveTab(TABS.Members)}
+                            >
+                                <Text style={[styles.tabText, activeTab === TABS.Members && styles.activeTabText]}>
+                                    Members
+                                </Text>
+                        </Pressable>
+                    </View>
+                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+                    {activeTab === TABS.Events ? 
+                        <GroupDetailEventsTab pastEvents={getPastEvents()} upcomingEvents={getUpcomingEvents()} /> : 
+                        <GroupDetailMembersTab />}
+                </ScrollView>
+
+                </ScrollView>
+            
+
+                <View style={styles.aboutSection}>
+                    <Text style={styles.aboutTitle}>About this group</Text>
+                    <Text style={styles.aboutText}>
+                        A group for weekend adventures and activities! We plan hikes, beach days, game nights, and more. Join us for fun weekend experiences with like-minded people.
+                    </Text>
+                    <Pressable style={styles.leaveButton}>
+                        <Ionicons name="exit-outline" size={20} color="#666" />
+                        <Text style={styles.leaveButtonText}>Leave Group</Text>
+                    </Pressable>
+                </View>
+
+            </View>
+            
         </View>
         </>
     );
@@ -65,7 +171,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        paddingTop: 250,
         flex: 1,
     },
     blockHeading: {
@@ -130,6 +235,97 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '400',
         color: 'white',
-    }
+    },
+    tabContainer: {
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e7eb',
+    },
+    scrollView: {
+        flex: 1,
+        width: '100%',
+    },
+    containerBody: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 20,
+        width: '100%',
+        paddingHorizontal: 20,
+        backgroundColor: '#f3f4f6',
+        marginTop: 190,
 
+    },
+    tabs:{
+        width: '100%',
+        backgroundColor: '#f3f4f6',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+    },
+    eventsTab: {
+
+    }, 
+    membersTab: {
+
+    },
+    tab: {
+        flex: 1,
+        paddingVertical: 16,
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderBottomColor: 'transparent',
+        backgroundColor: 'white',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+    },
+    activeTab: {
+        borderBottomColor: '#8200DB',
+    },
+    tabText: {
+        fontSize: 16,
+        color: '#6b7280',
+        fontWeight: '500',
+    },
+    activeTabText: {
+        color: '#8200DB',
+        fontWeight: '600',
+    },
+    aboutSection: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        width: '100%',  
+        gap: 6,    
+    },
+    aboutTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#1f2937',
+    },
+    aboutText: {
+        fontSize: 14,
+        color: '#6b7280',
+        lineHeight: 20,
+    },
+    leaveButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        borderWidth: 1,
+        borderColor: '#d1d5db',
+        borderRadius: 8,
+        backgroundColor: 'white',
+        width: '100%',
+    },
+    leaveButtonText: {
+        color: '#6b7280',
+        fontWeight: '500',
+        marginLeft: 8,
+    },
 })
