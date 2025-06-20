@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/app/stores/useAuthStore';
 import { StyleSheet, View, Text } from 'react-native';
 
-export default function AlertsScreen() {
+export default function ProfileScreen() {
     const { user } = useAuthStore();
 
   return (

@@ -1,7 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Pressable } from "react-native";
 import { GroupDetailEventCard } from "./GroupDetailEventCard";
 import { Event } from "@/app/types/event";
+import { useRouter } from "expo-router";
 
 interface GroupDetailEventsTabProps {
     upcomingEvents: Event[]; 
@@ -9,15 +10,17 @@ interface GroupDetailEventsTabProps {
 }
 
 export const GroupDetailEventsTab = ({ upcomingEvents, pastEvents } : GroupDetailEventsTabProps ) => {
+    const router = useRouter();
+    
     return (
         <View style={styles.tabContent}>
             <View style={styles.eventsSection}>
                 <View style={styles.sectionHeader}> 
                     <Text style={styles.sectionTitle}>Upcoming Events</Text>
-                    <TouchableOpacity style={styles.createButton}>
+                    <Pressable style={styles.createButton} onPress={() => router.push('/create-event')}>
                         <Ionicons name="add" size={20} color="#8200DB" />
                         <Text style={styles.createButtonText}>Create</Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
                 {upcomingEvents.map(event => { 
                     return <GroupDetailEventCard event={event} isUpcoming={true} />

@@ -9,7 +9,7 @@ interface GroupDetailEventCard {
     isUpcoming: boolean;
 }
 
-export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => {
+export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => {    
     return (<View key={event.id} style={styles.eventItem}>
                 <View style={styles.eventContent}>
                     <View style={styles.eventInfo}>

@@ -5,6 +5,7 @@ import { Invite } from "@/app/types/invite";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as invitesService from "@/app/services/invites.service";
 import FlashMessage, { showMessage } from "react-native-flash-message";
+import { ActionButtons } from "./ActionButtons";
 
 interface InviteCardProps {
     invite: Invite;
@@ -63,14 +64,10 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                         <Text style={styles.details}>Details</Text>
                     </View>
                 </View>
-                <View style={styles.actions}>
-                    <Pressable style={styles.rejectBtn} onPress={() => handleAcceptInvite(invite.id)}>
-                        <Ionicons name="close-outline" color={'#6A7282'} size={28} />                    
-                    </Pressable>
-                    <Pressable style={styles.acceptBtn} onPress={() => handleRejectInvite(invite.id)}>
-                        <Ionicons name="checkmark-outline" color={'#8200DB'} size={28}/>                    
-                    </Pressable>
-                </View>  
+                <ActionButtons 
+                    handleAccept={() => handleAcceptInvite(invite.id)} 
+                    handleReject={() => handleRejectInvite(invite.id)} />
+                
         </View>
         </>
     );
@@ -127,27 +124,4 @@ const styles = StyleSheet.create({
         color: '#6A7282',
         fontWeight: '400',
     },
-    actions: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 10,
-    },
-    acceptBtn: {
-        borderRadius: '50%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 5,
-        backgroundColor: '#F3E8FF',
-    }, 
-    rejectBtn: {
-        borderRadius: '50%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 5,
-        backgroundColor: '#F3F4F6',
-    }
-
 })
