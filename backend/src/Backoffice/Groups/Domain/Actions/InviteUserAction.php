@@ -27,7 +27,6 @@ class InviteUserAction
             'group_id' => $group->id,
             'user_id' => $user->id,
             'status' => InviteStatus::PENDING,
-
         ]);
     }
 }

@@ -26,9 +26,11 @@ use IHC\Backoffice\Groups\App\Controllers\ListGroupInvitesController;
 use IHC\Backoffice\Groups\App\Controllers\ListGroupsController;
 use IHC\Backoffice\Groups\App\Controllers\ListGroupUsersController;
 use IHC\Backoffice\Groups\App\Controllers\UpdateGroupController;
+use IHC\Backoffice\Images\App\Controllers\CreateImageController;
 use IHC\Backoffice\Invites\App\Controllers\AcceptInviteController;
 use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;
+use IHC\Backoffice\Messages\App\Controllers\CreateMessageController;
 use IHC\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -54,11 +56,7 @@ Route::prefix('auth')->group(static function (): void {
     Route::post('google', GoogleLoginController::class);
     Route::post('register', StoreUserController::class);
     Route::post('refresh', RefreshController::class)->middleware('auth');
-    Route::get('me', function (#[CurrentUser] $user) {
-        return response()->json([
-            'data' => $user,
-        ]);
-    })->middleware('auth');
+    Route::get('me', fn (#[CurrentUser] $user) => response()->json(['data' => $user]))->middleware('auth');
 });
 
 Route::middleware('auth')->group(function () {
@@ -90,6 +88,10 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{event}', DeleteEventController::class);
         Route::post('/{event}/accept', ConfirmEventController::class);
         Route::post('/{event}/reject', RejectEventController::class);
+
+        Route::post('/{event}/messages', CreateMessageController::class);
+        Route::post('/{event}/images', CreateImageController::class);
+        Route::post('/{event}/polls');
     });
 
 });

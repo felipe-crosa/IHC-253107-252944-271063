@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace IHC\Backoffice\Events\App\Controllers;
 
+use IHC\Backoffice\Events\App\Resources\EventResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ListEventsController {
@@ -11,6 +13,17 @@ class ListEventsController {
     {
         $user = $request->user();
 
-        return response()->json($user->acceptedEvents, 200);
+        $events = $user->acceptedEvents()->with([
+            'cancelledAttendees',
+            'pendingAttendees',
+            'confirmedAttendees',
+            'category',
+            'messages.sender',
+            'images.user',
+        ])->get();
+
+        return EventResource::collection($events)
+            ->response()
+            ->setStatusCode(JsonResponse::HTTP_OK);
     }
 }

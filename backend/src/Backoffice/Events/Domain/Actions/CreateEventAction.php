@@ -41,6 +41,15 @@ class CreateEventAction
             ->whereIn('user_id', $groupMembers->pluck('id'))
             ->update(['status' => ParticipationStatus::ACCEPTED]);
 
+        $event->load([
+            'cancelledAttendees',
+            'pendingAttendees',
+            'confirmedAttendees',
+            'category',
+            'messages.sender',
+            'images.user',
+        ]);
+
         return $event;
     }
 }
