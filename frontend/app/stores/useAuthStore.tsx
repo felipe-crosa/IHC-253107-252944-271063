@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User } from '../types/user.interface';
+import { User } from '../types/user';
 import { LoginFormData } from '../types/login';
 import * as authenticationService from '../services/authentication.service';
 import axios from '../providers/axios.provider';

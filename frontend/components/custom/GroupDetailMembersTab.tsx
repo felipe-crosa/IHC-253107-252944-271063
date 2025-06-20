@@ -1,4 +1,4 @@
-import { User } from "@/app/types/user.interface";
+import { User } from "@/app/types/user";
 import { View, Text, StyleSheet } from "react-native";
 
 interface GroupDetailMembersTabProps {

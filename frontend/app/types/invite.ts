@@ -1,5 +1,5 @@
 import { Group } from "./group";
-import { User } from "./user.interface";
+import { User } from "./user";
 
 export const InviteStatus = {
     PENDING: 'pending',

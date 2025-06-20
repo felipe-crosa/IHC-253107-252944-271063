@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { User } from "./user.interface";
+import { User } from "./user";
 import { createGroupSchema } from "../schemas/create-group.schema";
 
 export interface Group {
