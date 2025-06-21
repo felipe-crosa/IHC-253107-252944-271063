@@ -26,7 +26,6 @@ export default function GroupDetailsPage() {
     const getGroup = async (id: string) => {
         try {
             const response = await groupsService.getById(id);
-
             setGroup(response);
         } catch (error: any) {
             showMessage({

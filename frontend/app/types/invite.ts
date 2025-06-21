@@ -8,6 +8,14 @@ export const InviteStatus = {
 
 export type InviteStatus = (typeof InviteStatus)[keyof typeof InviteStatus];
 
-export interface Invite extends Group {}
+export interface Invite {
+    id: number;
+    user_id: number;
+    group_id: number;
+    status: InviteStatus;
+    created_at: string;
+    updated_at: string;
+    group: Group;
+}
 
 

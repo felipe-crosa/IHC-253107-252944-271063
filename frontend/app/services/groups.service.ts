@@ -6,7 +6,7 @@ const baseUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/groups`
 export const getAll = async () => {
     const response = await axios.get(`${baseUrl}`);
 
-    return response.data;
+    return response.data.data;
 }
 
 export const create = async (data: CreateGroupFormData) : Promise<Group> => {
@@ -14,7 +14,7 @@ export const create = async (data: CreateGroupFormData) : Promise<Group> => {
         ...data
     });
 
-    return response.data;
+    return response.data.data;
 
 }
 
