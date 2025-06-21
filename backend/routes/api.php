@@ -16,6 +16,7 @@ use IHC\Backoffice\Events\App\Controllers\ListEventsController;
 use IHC\Backoffice\Events\App\Controllers\ListPendingEventsController;
 use IHC\Backoffice\Events\App\Controllers\RejectEventController;
 use IHC\Backoffice\Events\App\Controllers\UpdateEventController;
+use IHC\Backoffice\Events\Domain\Models\Category;
 use IHC\Backoffice\Groups\App\Controllers\CreateGroupController;
 use IHC\Backoffice\Groups\App\Controllers\DeleteGroupController;
 use IHC\Backoffice\Groups\App\Controllers\GetGroupController;
@@ -26,9 +27,14 @@ use IHC\Backoffice\Groups\App\Controllers\ListGroupInvitesController;
 use IHC\Backoffice\Groups\App\Controllers\ListGroupsController;
 use IHC\Backoffice\Groups\App\Controllers\ListGroupUsersController;
 use IHC\Backoffice\Groups\App\Controllers\UpdateGroupController;
+use IHC\Backoffice\Images\App\Controllers\CreateImageController;
 use IHC\Backoffice\Invites\App\Controllers\AcceptInviteController;
 use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;
+use IHC\Backoffice\Messages\App\Controllers\CreateMessageController;
+use IHC\Backoffice\Polls\App\Controllers\CreatePollController;
+use IHC\Backoffice\Polls\App\Controllers\RemoveVotePollController;
+use IHC\Backoffice\Polls\App\Controllers\VotePollController;
 use IHC\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -36,6 +42,9 @@ use IHC\Backoffice\Users\App\Controllers\{
     StoreUserController,
     UpdateUserController
 };
+use IHC\Notifications\App\Controllers\GetNotificationsController;
+use IHC\Notifications\App\Controllers\GetUnreadNotificationsController;
+use IHC\Notifications\App\Controllers\ReadNotificationsController;
 use Illuminate\Console\View\Components\Confirm;
 
 /*
@@ -54,11 +63,7 @@ Route::prefix('auth')->group(static function (): void {
     Route::post('google', GoogleLoginController::class);
     Route::post('register', StoreUserController::class);
     Route::post('refresh', RefreshController::class)->middleware('auth');
-    Route::get('me', function (#[CurrentUser] $user) {
-        return response()->json([
-            'data' => $user,
-        ]);
-    })->middleware('auth');
+    Route::get('me', fn (#[CurrentUser] $user) => response()->json(['data' => $user]))->middleware('auth');
 });
 
 Route::middleware('auth')->group(function () {
@@ -90,6 +95,27 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{event}', DeleteEventController::class);
         Route::post('/{event}/accept', ConfirmEventController::class);
         Route::post('/{event}/reject', RejectEventController::class);
+
+        Route::post('/{event}/messages', CreateMessageController::class);
+        Route::post('/{event}/images', CreateImageController::class);
+        Route::post('/{event}/polls', CreatePollController::class);
+    });
+
+    Route::prefix('polls')->group(static function (): void {
+        Route::post('/{poll}/vote', VotePollController::class);
+            Route::post('/{poll}/remove-vote', RemoveVotePollController::class);
+    });
+
+    Route::prefix('/categories')->group(static function (): void {
+        Route::get('/', fn () => response()->json([
+            'data' => Category::get()
+        ]));
+    });
+
+    Route::prefix('notifications')->group(static function (): void {
+        Route::get('/', GetNotificationsController::class);
+        Route::post('/read', ReadNotificationsController::class);
+        Route::get('/unread', GetUnreadNotificationsController::class);
     });
 
 });

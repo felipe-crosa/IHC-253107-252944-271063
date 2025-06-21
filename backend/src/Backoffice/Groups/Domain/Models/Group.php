@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace IHC\Backoffice\Groups\Domain\Models;
 
+use IHC\Backoffice\Events\Domain\Models\Event;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
+use IHC\Backoffice\Invites\Domain\Models\Invite;
 use IHC\Backoffice\Users\Domain\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * 
@@ -39,6 +42,8 @@ use IHC\Backoffice\Users\Domain\Models\User;
  * @property-read int|null $users_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $invites
  * @property-read int|null $invites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $events
+ * @property-read int|null $events_count
  * @mixin \Eloquent
  */
 class Group extends Model
@@ -58,9 +63,15 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'invites')->wherePivot('status', InviteStatus::ACCEPTED);
     }
 
-    public function invites(): BelongsToMany
+    public function invites(): HasMany
     {
-        return $this->belongsToMany(User::class, 'invites')
-            ->wherePivot('status', InviteStatus::PENDING);
+        return $this->hasMany(Invite::class)
+            ->where('status', InviteStatus::PENDING)
+            ->with('user');
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
     }
 }

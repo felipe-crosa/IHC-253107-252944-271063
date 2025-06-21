@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace IHC\Backoffice\Events\Domain\Models;
 
 use IHC\Backoffice\Events\Domain\Enums\ParticipationStatus;
+use IHC\Backoffice\Images\Domain\Models\Image;
+use IHC\Backoffice\Messages\Domain\Models\Message;
+use IHC\Backoffice\Polls\Domain\Models\Poll;
 use IHC\Backoffice\Users\Domain\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $title
@@ -42,13 +46,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property-read int|null $confirmed_attendees_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $pendingAttendees
  * @property-read int|null $pending_attendees_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Message> $messages
+ * @property-read int|null $messages_count
+ * @property-read \IHC\Backoffice\Events\Domain\Models\Category $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Image> $images
+ * @property-read int|null $images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Poll> $polls
+ * @property-read int|null $polls_count
  * @mixin \Eloquent
  */
 class Event extends Model
 {
     public function category(): BelongsTo
     {
-        return $this->belongsTo('categories');
+        return $this->belongsTo(Category::class);
     }
 
     public function confirmedAttendees(): BelongsToMany
@@ -73,5 +84,20 @@ class Event extends Model
             User::class,
             'participants'
         )->wherePivot('status', ParticipationStatus::PENDING);
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
+    }
+
+    public function polls(): HasMany
+    {
+        return $this->hasMany(Poll::class);
     }
 }

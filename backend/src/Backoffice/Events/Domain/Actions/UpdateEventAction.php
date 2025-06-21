@@ -20,6 +20,16 @@ class UpdateEventAction
 
         $event->save();
 
+        $event->load([
+            'cancelledAttendees',
+            'pendingAttendees',
+            'confirmedAttendees',
+            'category',
+            'messages.sender',
+            'images.user',
+            'polls.options'
+        ]);
+
         return $event;
     }
 }

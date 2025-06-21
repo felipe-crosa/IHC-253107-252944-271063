@@ -16,6 +16,7 @@ class UpdateGroupAction
         $group->description = $data->description;
 
         $group->save();
+        $group->loadCount('users');
 
         return $group;
     }

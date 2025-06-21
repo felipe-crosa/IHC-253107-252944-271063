@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace IHC\Backoffice\Groups\App\Controllers;
 
+use IHC\Backoffice\Groups\App\Resources\GroupResource;
 use IHC\Backoffice\Groups\Domain\Actions\ListGroupsAction;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ class ListGroupsController
     {
         $groups = $listGroupsAction->execute($request->user());
 
-        return response()->json($groups);
+        return GroupResource::collection($groups)
+            ->response()
+            ->setStatusCode(200);
     }
 }

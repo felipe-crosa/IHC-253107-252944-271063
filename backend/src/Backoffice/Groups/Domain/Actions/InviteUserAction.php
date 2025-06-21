@@ -8,6 +8,7 @@ use IHC\Backoffice\Groups\Domain\Models\Group;
 use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
 use IHC\Backoffice\Invites\Domain\Models\Invite;
 use IHC\Backoffice\Users\Domain\Models\User;
+use IHC\Notifications\Domain\Models\Notification;
 
 class InviteUserAction
 {
@@ -27,7 +28,13 @@ class InviteUserAction
             'group_id' => $group->id,
             'user_id' => $user->id,
             'status' => InviteStatus::PENDING,
+        ]);
 
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'group_invite',
+            'title' => 'New Group Invitation',
+            'body' => "You have been invited to join the group: {$group->name}.",
         ]);
     }
 }
