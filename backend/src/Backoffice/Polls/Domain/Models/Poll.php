@@ -35,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Poll whereUserId($value)
  * @property bool $multiple_answers
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Poll whereMultipleAnswers($value)
+ * @property-read int|null $options_count
  * @mixin \Eloquent
  */
 class Poll extends Model

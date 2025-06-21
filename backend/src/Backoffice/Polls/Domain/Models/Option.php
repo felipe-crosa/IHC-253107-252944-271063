@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Option whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Option whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Option wherePollId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \IHC\Backoffice\Polls\Domain\Models\Vote> $votes
+ * @property-read int|null $votes_count
  * @mixin \Eloquent
  */
 class Option extends Model

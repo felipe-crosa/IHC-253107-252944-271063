@@ -9,6 +9,7 @@ use IHC\Backoffice\Events\Domain\Models\Event as ModelsEvent;
 use IHC\Backoffice\Polls\Domain\DataTransferObjects\CreatePollDto;
 use IHC\Backoffice\Polls\Domain\Models\Poll;
 use IHC\Backoffice\Users\Domain\Models\User;
+use IHC\Notifications\Domain\Models\Notification;
 
 class CreatePollAction
 {
@@ -33,6 +34,17 @@ class CreatePollAction
         );
 
         $poll->load('options');
+
+        $event->confirmedAttendees->each(function (User $attendee) use ($poll, $event) {
+            if ($attendee->id === $poll->user_id) return;
+            Notification::create([
+                'user_id' => $attendee->id,
+                'type' => 'poll_created',
+                'title' => 'New Poll Created',
+                'description' => "A new poll has been created for the event: {$event->title}.",
+            ]);
+        });
+
         return $poll;
     }
 }

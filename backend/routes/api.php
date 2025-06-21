@@ -42,6 +42,9 @@ use IHC\Backoffice\Users\App\Controllers\{
     StoreUserController,
     UpdateUserController
 };
+use IHC\Notifications\App\Controllers\GetNotificationsController;
+use IHC\Notifications\App\Controllers\GetUnreadNotificationsController;
+use IHC\Notifications\App\Controllers\ReadNotificationsController;
 use Illuminate\Console\View\Components\Confirm;
 
 /*
@@ -107,6 +110,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', fn () => response()->json([
             'data' => Category::get()
         ]));
+    });
+
+    Route::prefix('notifications')->group(static function (): void {
+        Route::get('/', GetNotificationsController::class);
+        Route::post('/read', ReadNotificationsController::class);
+        Route::get('/unread', GetUnreadNotificationsController::class);
     });
 
 });

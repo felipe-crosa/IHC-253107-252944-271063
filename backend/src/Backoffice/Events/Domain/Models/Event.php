@@ -51,6 +51,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \IHC\Backoffice\Events\Domain\Models\Category $category
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Image> $images
  * @property-read int|null $images_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Poll> $polls
+ * @property-read int|null $polls_count
  * @mixin \Eloquent
  */
 class Event extends Model
