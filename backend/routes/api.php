@@ -16,6 +16,7 @@ use IHC\Backoffice\Events\App\Controllers\ListEventsController;
 use IHC\Backoffice\Events\App\Controllers\ListPendingEventsController;
 use IHC\Backoffice\Events\App\Controllers\RejectEventController;
 use IHC\Backoffice\Events\App\Controllers\UpdateEventController;
+use IHC\Backoffice\Events\Domain\Models\Category;
 use IHC\Backoffice\Groups\App\Controllers\CreateGroupController;
 use IHC\Backoffice\Groups\App\Controllers\DeleteGroupController;
 use IHC\Backoffice\Groups\App\Controllers\GetGroupController;
@@ -32,6 +33,8 @@ use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;
 use IHC\Backoffice\Messages\App\Controllers\CreateMessageController;
 use IHC\Backoffice\Polls\App\Controllers\CreatePollController;
+use IHC\Backoffice\Polls\App\Controllers\RemoveVotePollController;
+use IHC\Backoffice\Polls\App\Controllers\VotePollController;
 use IHC\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -93,6 +96,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/{event}/messages', CreateMessageController::class);
         Route::post('/{event}/images', CreateImageController::class);
         Route::post('/{event}/polls', CreatePollController::class);
+    });
+
+    Route::prefix('polls')->group(static function (): void {
+        Route::post('/{poll}/vote', VotePollController::class);
+            Route::post('/{poll}/remove-vote', RemoveVotePollController::class);
+    });
+
+    Route::prefix('/categories')->group(static function (): void {
+        Route::get('/', fn () => response()->json([
+            'data' => Category::get()
+        ]));
     });
 
 });

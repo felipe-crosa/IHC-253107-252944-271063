@@ -15,6 +15,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use IHC\Backoffice\Groups\Domain\Models\Group;
 use IHC\Backoffice\Invites\Domain\Enums\InviteStatus;
+use IHC\Backoffice\Invites\Domain\Models\Invite;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -118,9 +120,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::ACCEPTED);
     }
 
-    public function invites(): BelongsToMany
+    public function invites(): HasMany
     {
-        return $this->belongsToMany(Group::class, 'invites')->wherePivot('status', InviteStatus::PENDING);
+        return $this->hasMany(Invite::class)->where('status', InviteStatus::PENDING)->with('group');
     }
 
     public function events(): BelongsToMany

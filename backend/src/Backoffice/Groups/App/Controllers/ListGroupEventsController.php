@@ -23,7 +23,7 @@ class ListGroupEventsController
             'polls.options'
         ])->get();
 
-        EventResource::collection($events)
+        return EventResource::collection($events)
             ->response()
             ->setStatusCode(200);
     }
