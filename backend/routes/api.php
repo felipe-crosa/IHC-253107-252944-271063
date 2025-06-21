@@ -31,6 +31,7 @@ use IHC\Backoffice\Invites\App\Controllers\AcceptInviteController;
 use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;
 use IHC\Backoffice\Messages\App\Controllers\CreateMessageController;
+use IHC\Backoffice\Polls\App\Controllers\CreatePollController;
 use IHC\Backoffice\Users\App\Controllers\{
     DeleteUserController,
     GetUserController,
@@ -91,7 +92,7 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/{event}/messages', CreateMessageController::class);
         Route::post('/{event}/images', CreateImageController::class);
-        Route::post('/{event}/polls');
+        Route::post('/{event}/polls', CreatePollController::class);
     });
 
 });

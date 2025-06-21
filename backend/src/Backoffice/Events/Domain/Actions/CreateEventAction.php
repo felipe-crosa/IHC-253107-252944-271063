@@ -48,6 +48,7 @@ class CreateEventAction
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ]);
 
         return $event;

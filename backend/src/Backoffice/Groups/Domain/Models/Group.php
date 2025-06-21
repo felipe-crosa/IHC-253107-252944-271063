@@ -14,7 +14,7 @@ use IHC\Backoffice\Users\Domain\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $name
@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read int|null $users_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $invites
  * @property-read int|null $invites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Event> $events
+ * @property-read int|null $events_count
  * @mixin \Eloquent
  */
 class Group extends Model

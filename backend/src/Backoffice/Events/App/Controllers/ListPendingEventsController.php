@@ -20,6 +20,7 @@ class ListPendingEventsController {
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ])->get();
 
         return EventResource::collection($events)

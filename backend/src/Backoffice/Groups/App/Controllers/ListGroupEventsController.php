@@ -20,6 +20,7 @@ class ListGroupEventsController
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ])->get();
 
         EventResource::collection($events)
