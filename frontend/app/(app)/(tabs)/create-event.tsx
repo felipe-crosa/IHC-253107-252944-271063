@@ -106,7 +106,7 @@ export default function CreateEventScreen() {
                         <CategorySelector
                             categories={categories}
                             onChange={onChange}
-                            value={parseInt(value)}
+                            value={value}
                         />   
                     )}
                 />

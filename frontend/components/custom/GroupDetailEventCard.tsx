@@ -9,7 +9,9 @@ interface GroupDetailEventCard {
     isUpcoming: boolean;
 }
 
-export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => {    
+export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => { 
+    console.log(event.start_at);
+    console.log(typeof event.start_at);   
     return (<View key={event.id} style={styles.eventItem}>
                 <View style={styles.eventContent}>
                     <View style={styles.eventInfo}>
@@ -18,7 +20,7 @@ export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCar
                         </View>
                         <View style={styles.eventDetails}>
                             <Text style={styles.eventTitle}>{event.title}</Text>
-                            <Text style={styles.eventDate}>{ formatShortDate(event.start_at.toDateString()) }</Text>
+                            <Text style={styles.eventDate}>{ event.start_at }</Text>
                         </View>
                     </View>
                     {!isUpcoming && (

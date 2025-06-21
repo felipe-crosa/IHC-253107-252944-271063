@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
-  TouchableOpacity,
   StyleSheet,
-  Platform,
   ViewStyle,
   TextStyle,
 } from 'react-native';
@@ -27,12 +24,10 @@ export const DateTime = ({
   const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate) {
       if (value) {
-        // If we already have a value, preserve the time
         const updated = new Date(selectedDate);
         updated.setHours(value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
         onChange(updated);
       } else {
-        // If no existing value, use the selected date with current time
         onChange(selectedDate);
       }
     }

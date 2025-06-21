@@ -4,7 +4,7 @@ export const createEventStep1Schema = z.object({
     title: z.string().min(1, { message: 'Event name is required' }),
     description: z.string().min(1, { message: 'Event description is required' }),
     start_at: z.date(),
-    category_id: z.string().min(1, { message: 'Category ID is required' }),
+    category_id: z.number().min(1, { message: 'Category is required' }),
     location: z.string().min(1, { message: 'Event description is required' }),
 });
   
