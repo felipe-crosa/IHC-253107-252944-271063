@@ -3,9 +3,7 @@ import { z } from 'zod';
 export const createEventStep1Schema = z.object({
     title: z.string().min(1, { message: 'Event name is required' }),
     description: z.string().min(1, { message: 'Event description is required' }),
-    start_at: z.date().refine(date => date > new Date(), {
-        message: 'Event start date must be in the future',
-    }),
+    start_at: z.date(),
     category_id: z.string().min(1, { message: 'Category ID is required' }),
     location: z.string().min(1, { message: 'Event description is required' }),
 });
