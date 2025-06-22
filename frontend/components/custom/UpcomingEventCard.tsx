@@ -18,7 +18,7 @@ export const UpcomingEventCard = ({ event } : UpcomingEventCardProps) => {
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
-                {event.group_id} • {event.start_at.toDateString()}
+                {event.group_id} • {event.start_at}
                 </Text>
             </View>
             <Text style={styles.attendeesText}>8 going</Text>

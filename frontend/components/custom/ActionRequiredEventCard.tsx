@@ -15,7 +15,7 @@ export const ActionRequiredEventCard = ({ event, handleAcceptAction, handleRejec
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
-                {event.group_id} • {event.start_at.toDateString()}
+                {event.group_id} • {event.start_at}
                 </Text>
             </View>
             <ActionButtons handleAccept={() => handleAcceptAction} handleReject={() => handleRejectAction} />

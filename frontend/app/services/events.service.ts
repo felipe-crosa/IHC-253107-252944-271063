@@ -1,4 +1,4 @@
-import { CreateEventFormData, eventsArraySchema, eventSchema } from "../types/event";
+import { CreateEventFormData } from "../types/event";
 import axios from "../providers/axios.provider";
 import { Event } from "../types/event";
 
@@ -14,12 +14,16 @@ export const create = async (data: CreateEventFormData) : Promise<Event> => {
 
 export const getAll = async () : Promise<Event[]> => {
     const response = await axios.get(`${baseUrl}`);
-    const rawData = response.data.data;
-    return eventsArraySchema.parse(rawData);
+    return response.data.data;
 }
 
 export const getById = async (id: number) : Promise<Event> => {
     const response = await axios.get(`${baseUrl}/${id}`);
-    const rawData = response.data.data;
-    return eventSchema.parse(rawData);
+    return response.data.data;
+}
+
+export const getPendingEvents = async () : Promise<Event[]> => {
+    const response = await axios.get(`${baseUrl}/pending`);
+
+    return response.data.data;
 }

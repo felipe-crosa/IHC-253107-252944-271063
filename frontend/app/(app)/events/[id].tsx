@@ -1,11 +1,14 @@
 import { getInitials } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { Event } from "@/app/types/event";
 import * as eventsService from "@/app/services/events.service";
+import * as messagesService from "@/app/services/messages.service";
+import { Message } from "@/app/types/message";
+import { EventDiscussionTab } from "@/app/components/custom/EventDiscussionTab";
 
 const TABS = {
     Discussion: 'Discussion',
@@ -25,27 +28,42 @@ const mockEvent = {
     category_id: 1,
 }
 
-export default function GroupDetailsPage() {
+export default function EventDetailsPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
-    const [event, setEvent] = useState<Event | null>(mockEvent);
+    const [event, setEvent] = useState<Event | null>(null);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [activeTab, setActiveTab] = useState<Tabs>(TABS.Discussion);
 
-    // const getEvent = async (id: string) => {
-    //     try {
-    //         const response = await eventsService.getById(parseInt(id));
-    //         setEvent(response);
-    //     } catch (error: any) {
-    //         showMessage({
-    //             message: error.message || "An error occurred while fetching event details.",
-    //             type: "danger",
-    //         })
-    //     }
-    // }
+    const getEvent = async (id: number) => {
+        try {
+            const response = await eventsService.getById(id);
+            setEvent(response);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while fetching event details.",
+                type: "danger",
+            })
+        }
+    }
 
-    // useEffect(() => {
-    //     getEvent(id as string);
-    // }, [id]);
+    const handleSendMessage = async (content: string) => {
+        try {
+            const response = await messagesService.createMessage(event?.id || 0, content);
+            setMessages(prev => [response, ...prev]);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while sending the message.",
+                type: "danger",
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (!id) return;
+        getEvent(parseInt(id as string));
+        setMessages(event?.messages || []);
+    }, [id]);
 
     if (!id || !event) {
         return <Text>Loading...</Text>;
@@ -100,9 +118,11 @@ export default function GroupDetailsPage() {
                         </Pressable>
                     </View>
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    {/* {activeTab === TABS.Discussion ? 
-                        <GroupDetailEventsTab pastEvents={getPastEvents()} upcomingEvents={getUpcomingEvents()} /> : 
-                        <GroupDetailMembersTab />} */}
+                    {activeTab === TABS.Discussion &&
+                        <EventDiscussionTab messages={event.messages || []} onSendMessage={handleSendMessage} />
+                    }
+                    {activeTab === TABS.Photos && <Text>Photos</Text>}
+                    {activeTab === TABS.Polls && <Text>Polls</Text>}
                 </ScrollView>
 
                 </ScrollView>

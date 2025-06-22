@@ -1,5 +1,4 @@
-export interface Category {
-    id: number;
-    name: string;
-    description: string;
-}
+import { categorySchema } from "../schemas/category.schema";
+import { z } from "zod";
+
+export type Category = z.infer<typeof categorySchema>;

@@ -1,15 +1,6 @@
 import { z } from "zod";
 import { createEventSchema, createEventStep1Schema, createEventStep2Schema } from "../schemas/create-event.schema";
-
-export const eventSchema = z.object({
-    id: z.number(),
-    title: z.string(),
-    description: z.string(),    
-    start_at: z.string(),    
-    location: z.string(),
-    group_id: z.number(),
-    category_id: z.number(),
-});
+import { eventSchema } from "../schemas/event.schema";
 
 export type Event = z.infer<typeof eventSchema>;
 
