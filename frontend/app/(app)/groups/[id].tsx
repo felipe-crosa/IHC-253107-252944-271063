@@ -2,13 +2,14 @@ import { Group } from "@/app/types/group";
 import { formatShortDate, getInitials } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import * as groupsService from "@/app/services/groups.service";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { GroupDetailEventsTab } from "@/components/custom/GroupDetailEventsTab";
 import { GroupDetailMembersTab } from "@/components/custom/GroupDetailMembersTab";
 import { Event } from "@/app/types/event";
+import { User } from "@/app/types/user";
 import { getPastEvents, getUpcomingEvents } from "@/helpers/event-status.helper";
 
 const TABS = {
@@ -23,6 +24,7 @@ export default function GroupDetailsPage() {
     const { id } = useLocalSearchParams();
     const [group, setGroup] = useState<Group | null>(null);
     const [events, setEvents] = useState<Event[]>([]);
+    const [members, setMembers] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<Tabs>(TABS.Events);
 
     const getGroup = async (id: string) => {
@@ -49,9 +51,22 @@ export default function GroupDetailsPage() {
         }
     }
 
+    const getMembers = async (id: string) => {
+        try {
+            const response = await groupsService.getMembers(id);
+            setMembers(response);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while fetching group members.",
+                type: "danger",
+            })
+        }
+    }
+
     useEffect(() => {
         getGroup(id as string);
         getEvents(id as string);
+        getMembers(id as string);
     }, [id]);
 
     if (!id || !group) {
@@ -101,7 +116,7 @@ export default function GroupDetailsPage() {
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                     {activeTab === TABS.Events ? 
                         <GroupDetailEventsTab pastEvents={getPastEvents(events)} upcomingEvents={getUpcomingEvents(events)} /> : 
-                        <GroupDetailMembersTab />}
+                        <GroupDetailMembersTab members={members} />}
                 </ScrollView>
 
                 </ScrollView>
