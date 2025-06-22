@@ -1,9 +1,4 @@
-import { Group } from "./group";
+import { userSchema } from "../schemas/user.schema";
+import { z } from "zod";
 
-export interface User {
-    name: string;
-    email: string;
-    password: string;
-    phone: string;
-    groups: Group[];
-}
+export type User = z.infer<typeof userSchema>;

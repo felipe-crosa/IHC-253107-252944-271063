@@ -87,7 +87,6 @@ export default function SelectGroupScreen() {
                         name="group_id"
                         render={({ field }) => (
                             <GroupSelect groups={groups} {...field}/>
-
                         )} />
                 </View>
                 {errors.group_id && <Text style={styles.fieldError}>{errors.group_id.message}</Text>}

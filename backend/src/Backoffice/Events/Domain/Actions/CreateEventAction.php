@@ -10,6 +10,7 @@ use IHC\Backoffice\Events\Domain\Models\Event;
 use IHC\Backoffice\Events\Domain\Models\Participant;
 use IHC\Backoffice\Groups\Domain\Models\Group;
 use IHC\Backoffice\Users\Domain\Models\User;
+use IHC\Notifications\Domain\Models\Notification;
 
 class CreateEventAction
 {
@@ -48,7 +49,18 @@ class CreateEventAction
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ]);
+
+        $groupMembers->each(function (User $attendee) use ($event) {
+            if ($attendee->id === $event->created_by) return;
+            Notification::create([
+                'user_id' => $attendee->id,
+                'type' =>  'event_created',
+                'title' => 'New Event Created',
+                'description' => "A new event has been created: {$event->title}.",
+            ]);
+        });
 
         return $event;
     }

@@ -2,13 +2,15 @@ import { Group } from "@/app/types/group";
 import { formatShortDate, getInitials } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, Pressable, TouchableOpacity, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import * as groupsService from "@/app/services/groups.service";
 import FlashMessage, { showMessage } from "react-native-flash-message";
 import { GroupDetailEventsTab } from "@/components/custom/GroupDetailEventsTab";
 import { GroupDetailMembersTab } from "@/components/custom/GroupDetailMembersTab";
 import { Event } from "@/app/types/event";
+import { User } from "@/app/types/user";
+import { getPastEvents, getUpcomingEvents } from "@/helpers/event-status.helper";
 
 const TABS = {
     Events: 'Events',
@@ -21,12 +23,13 @@ export default function GroupDetailsPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
     const [group, setGroup] = useState<Group | null>(null);
+    const [events, setEvents] = useState<Event[]>([]);
+    const [members, setMembers] = useState<User[]>([]);
     const [activeTab, setActiveTab] = useState<Tabs>(TABS.Events);
 
     const getGroup = async (id: string) => {
         try {
             const response = await groupsService.getById(id);
-
             setGroup(response);
         } catch (error: any) {
             showMessage({
@@ -36,64 +39,35 @@ export default function GroupDetailsPage() {
         }
     }
 
+    const getEvents = async (id: string) => {
+        try {
+            const response = await groupsService.getEvents(id);
+            setEvents(response);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while fetching group events.",
+                type: "danger",
+            })
+        }
+    }
+
+    const getMembers = async (id: string) => {
+        try {
+            const response = await groupsService.getMembers(id);
+            setMembers(response);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while fetching group members.",
+                type: "danger",
+            })
+        }
+    }
+
     useEffect(() => {
         getGroup(id as string);
+        getEvents(id as string);
+        getMembers(id as string);
     }, [id]);
-
-    const mockEvents: Event[] = [
-        {
-            id: 1,
-            title: 'Beach Day',
-            description: 'Fun day at the beach with games and BBQ',
-            start_at: new Date(Date.now() + 24 * 60 * 60 * 1000), 
-            location: 'Santa Monica Beach',
-            group_id: parseInt(id as string),
-            category_id: 1,
-        },
-        {
-            id: 2,
-            title: 'Game Night',
-            description: 'Board games and video games night',
-            start_at: new Date('2024-05-15T19:00:00'), // May 15, 7:00 PM
-            location: 'Community Center',
-            group_id: parseInt(id as string),
-            category_id: 2,
-        },
-        {
-            id: 3,
-            title: 'Hiking Trip',
-            description: 'Morning hike through the mountains',
-            start_at: new Date('2024-04-22T09:00:00'), // Past event
-            location: 'Mountain Trail',
-            group_id: parseInt(id as string),
-            category_id: 3,
-        },
-        {
-            id: 4,
-            title: 'Movie Marathon',
-            description: 'Classic movie night with popcorn',
-            start_at: new Date('2024-03-15T18:00:00'), // Past event
-            location: 'Downtown Cinema',
-            group_id: parseInt(id as string),
-            category_id: 4,
-        },
-    ];
-
-    const isUpcomingEvent = (event: Event): boolean => {
-        return new Date(event.start_at) > new Date();
-    };
-
-    const getUpcomingEvents = (): Event[] => {
-        return mockEvents.filter(isUpcomingEvent).sort((a, b) => 
-            new Date(a.start_at).getTime() - new Date(b.start_at).getTime()
-        );
-    };
-
-    const getPastEvents = (): Event[] => {
-        return mockEvents.filter(event => !isUpcomingEvent(event)).sort((a, b) => 
-            new Date(b.start_at).getTime() - new Date(a.start_at).getTime()
-        );
-    };
 
     if (!id || !group) {
         return <Text>Loading...</Text>;
@@ -141,8 +115,8 @@ export default function GroupDetailsPage() {
                     </View>
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                     {activeTab === TABS.Events ? 
-                        <GroupDetailEventsTab pastEvents={getPastEvents()} upcomingEvents={getUpcomingEvents()} /> : 
-                        <GroupDetailMembersTab />}
+                        <GroupDetailEventsTab pastEvents={getPastEvents(events)} upcomingEvents={getUpcomingEvents(events)} /> : 
+                        <GroupDetailMembersTab members={members} />}
                 </ScrollView>
 
                 </ScrollView>

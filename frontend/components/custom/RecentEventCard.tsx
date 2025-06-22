@@ -12,7 +12,7 @@ export const RecentEventCard = ({ event } : RecentEventCardProps) => {
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
-                    {event.group_id} • {event.start_at.toDateString()}
+                    {event.group_id} • {event.start_at}
                 </Text>
             </View>
             <View style={styles.photoSection}>

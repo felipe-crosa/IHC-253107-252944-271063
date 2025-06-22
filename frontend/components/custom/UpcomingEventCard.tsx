@@ -1,25 +1,28 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Event } from "@/app/types/event";
+import { useRouter } from "expo-router";
 
 interface UpcomingEventCardProps {
     event: Event;
 }
 
 export const UpcomingEventCard = ({ event } : UpcomingEventCardProps) => {
+    const router = useRouter();
+    
     return (
-        <View key={event.id} style={styles.upcomingEventItem}>
+        <Pressable key={event.id} style={styles.upcomingEventItem} onPress={() => router.push(`/events/${event.id}`)}>
             <View style={styles.attendingIcon}>
                 <Ionicons name="checkmark" size={16} color="#10B981" />
             </View>
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
-                {event.group_id} • {event.start_at.toDateString()}
+                {event.group_id} • {event.start_at}
                 </Text>
             </View>
             <Text style={styles.attendeesText}>8 going</Text>
-        </View>
+        </Pressable>
     );
 }
 

@@ -7,6 +7,7 @@ namespace IHC\Backoffice\Events\App\Resources;
 use IHC\Backoffice\Events\Domain\Models\Event;
 use IHC\Backoffice\Images\App\Resources\ImageResource;
 use IHC\Backoffice\Messages\App\Resources\MessageResource;
+use IHC\Backoffice\Polls\App\Resources\PollResource;
 use IHC\Backoffice\Users\App\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -33,7 +34,8 @@ class EventResource extends JsonResource
             'pending_attendees' => $this->whenLoaded('pendingAttendees', fn () => UserResource::collection($this->pendingAttendees)),
             'cancelled_attendees' => $this->whenLoaded('cancelledAttendees', fn () => UserResource::collection($this->cancelledAttendees)),
             'messages' => $this->whenLoaded('messages', fn () => MessageResource::collection($this->messages)),
-            'images' => $this->whenLoaded('images', fn () => ImageResource::collection($this->images))
+            'images' => $this->whenLoaded('images', fn () => ImageResource::collection($this->images)),
+            'polls' => $this->whenLoaded('polls', fn () => PollResource::collection($this->polls))
         ];
     }
 }
