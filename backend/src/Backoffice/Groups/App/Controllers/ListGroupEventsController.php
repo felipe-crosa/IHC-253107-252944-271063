@@ -20,9 +20,10 @@ class ListGroupEventsController
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ])->get();
 
-        EventResource::collection($events)
+        return EventResource::collection($events)
             ->response()
             ->setStatusCode(200);
     }

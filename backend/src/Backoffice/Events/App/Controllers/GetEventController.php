@@ -18,6 +18,7 @@ class GetEventController {
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ]);
         return EventResource::make($event)
             ->response()

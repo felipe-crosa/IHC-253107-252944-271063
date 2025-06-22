@@ -1,63 +1,44 @@
 import { StyleSheet, View, Text, ScrollView, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Event } from '@/app/types/event';
 import { ActionRequiredEventCard } from '@/components/custom/ActionRequiredEventCard';
 import { UpcomingEventCard } from '@/components/custom/UpcomingEventCard';
 import { RecentEventCard } from '@/components/custom/RecentEventCard';
+import * as eventsService from '@/app/services/events.service';
+import { useEffect, useState } from 'react';
+import { showMessage } from 'react-native-flash-message';
+import { getPastEvents, getUpcomingEvents } from '@/helpers/event-status.helper';
 
 export default function HomeScreen() {
-  const actionRequiredEvents: Event[] = [
-    {
-      id: 1,
-      title: 'Beach Day',
-      description: 'Fun day at the beach with games, volleyball, and BBQ. Bring sunscreen and towels!',
-      start_at: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-      location: 'Santa Monica Beach',
-      group_id: 1,
-      category_id: 1,
-    },
-    {
-      id: 2,
-      title: 'Movie Night',
-      description: 'Watching the latest Marvel movie with popcorn and drinks provided.',
-      start_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now (Friday)
-      location: 'Downtown Cinema',
-      group_id: 2,
-      category_id: 2,
-    },
-  ]
+  const [actionRequiredEvents, setActionRequiredEvents] = useState<Event[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [recentEvents, setRecentEvents] = useState<Event[]>([]);
 
-  const upcomingEvents: Event[] = [
-    {
-      id: 3,
-      title: 'Hiking Trip',
-      description: 'Morning hike through the beautiful mountain trails. Moderate difficulty level.',
-      start_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Next Sunday
-      location: 'Mountain Trail Park',
-      group_id: 3,
-      category_id: 3
-    },
-    {
-      id: 4,
-      title: "Dinner at Luigi's",
-      description: 'Italian cuisine night at the famous Luigi\'s restaurant. Reservations confirmed.',
-      start_at: new Date('2024-05-20T19:30:00'), // May 20, 7:30 PM
-      location: "Luigi's Italian Restaurant",
-      group_id: 4,
-      category_id: 4,
-    },
-  ]
-  const recentEvents: Event[] = [
-    {
-      id: 5,
-      title: 'Game Night',
-      description: 'Board games and video games tournament with prizes and snacks.',
-      start_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // Last Friday
-      location: 'Community Center',
-      group_id: 1,
-      category_id: 5,
-    },
-  ];
+  const getEvents = async () => {
+    try {
+      const [allEvents, pendingEvents] = await Promise.all([
+        eventsService.getAll(),
+        eventsService.getPendingEvents(),
+      ]);
+
+      const upcoming = getUpcomingEvents(allEvents).filter(
+        (e) => !pendingEvents.some((p) => p.id === e.id)
+      );
+      const past = getPastEvents(allEvents);
+
+      setActionRequiredEvents(pendingEvents);
+      setUpcomingEvents(upcoming);
+      setRecentEvents(past);
+    } catch (error: any) {
+      showMessage({
+        message: error.message || "An error occurred while fetching events.",
+        type: "danger",
+      });
+    }
+  };
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   const handleAcceptAction = (eventId: number) => {
     console.log(`Accepted action for event ID: ${eventId}`);
@@ -79,7 +60,7 @@ export default function HomeScreen() {
           <Text style={styles.subtitle}>ACTION REQUIRED</Text>
           <View style={styles.events}>
             {actionRequiredEvents.map((event) => (
-              <ActionRequiredEventCard event={event} handleAcceptAction={handleAcceptAction} handleRejectAction={handleRejectAction}/>
+              <ActionRequiredEventCard key={event.id} event={event} handleAcceptAction={handleAcceptAction} handleRejectAction={handleRejectAction}/>
             ))}
           </View>
         </View>
@@ -87,7 +68,7 @@ export default function HomeScreen() {
           <Text style={styles.subtitle}>UPCOMING EVENTS</Text>
           <View style={styles.events}>
             {upcomingEvents.map((event) => (
-              <UpcomingEventCard event={event} />
+              <UpcomingEventCard key={event.id} event={event} />
             ))}
           </View>
         </View>
@@ -95,7 +76,7 @@ export default function HomeScreen() {
           <Text style={styles.subtitle}>RECENT EVENTS</Text>
           <View style={styles.events}>
             {recentEvents.map((event) => (
-              <RecentEventCard event={event} />
+              <RecentEventCard key={event.id} event={event} />
             ))}
           </View>
         </View>

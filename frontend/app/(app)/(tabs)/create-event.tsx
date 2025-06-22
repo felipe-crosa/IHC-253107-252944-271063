@@ -6,10 +6,33 @@ import { createEventStep1Schema } from '@/app/schemas/create-event.schema';
 import { DateTime } from '@/components/custom/DateTime';
 import { useRouter } from 'expo-router';
 import { useEventStore } from '@/app/stores/useEventStore';
+import { CategorySelector } from '@/components/custom/CategorySelector';
+import { Category } from '@/app/types/category';
+import { useEffect, useState } from 'react';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
+import * as categoriesService from '@/app/services/categories.service';
 
 export default function CreateEventScreen() {
     const router = useRouter();
     const { updateEventData, nextStep, eventData } = useEventStore();
+    const [categories, setCategories] = useState<Category[]>([])
+
+    const getCategories = async () => {
+        try {
+            const response = await categoriesService.getAll(); 
+            setCategories(response);
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while fetching categories.",
+                type: "danger",
+            });        
+        }
+    }
+
+    useEffect(() => {   
+        getCategories();
+    }
+    , []);
     
     const {
             control,
@@ -27,6 +50,8 @@ export default function CreateEventScreen() {
     }
         
   return (
+    <>
+    <FlashMessage position="top" />
     <View style={styles.container}>
         <View style={styles.header}> 
             <Text style={styles.title}>Create Event</Text>
@@ -72,18 +97,16 @@ export default function CreateEventScreen() {
                 />
                 {errors.start_at && <Text style={styles.fieldError}>{errors.start_at.message}</Text>}
             </View>
-            <View style={styles.input}>
+            <View style={styles.categoryInput}>
                 <Text style={styles.inputLabel}>Category</Text>
                 <Controller
                     control={control}
                     name="category_id"
                     render={({ field: { onChange, value }}) => (
-                        <TextInput
-                            style={styles.inputValue}
-                            placeholder="Choose a category"
-                            placeholderTextColor="#99A1AF"
-                            onChangeText={onChange}
-                            value={value.toString()}
+                        <CategorySelector
+                            categories={categories}
+                            onChange={onChange}
+                            value={value}
                         />   
                     )}
                 />
@@ -103,8 +126,7 @@ export default function CreateEventScreen() {
                             numberOfLines = {6}
                             onChangeText={onChange}
                             value={value}
-                        />
-                                    
+                        />        
                     )}
                 />
                 {errors.description && <Text style={styles.fieldError}>{errors.description.message}</Text>}
@@ -134,6 +156,7 @@ export default function CreateEventScreen() {
         </ScrollView>
     
     </View>
+    </>
   );
 }
 
@@ -194,6 +217,12 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-end',
+        width: '100%',
+        gap: 10,
+      },
+      categoryInput: {
+        display: 'flex',
+        flexDirection: 'column',
         width: '100%',
         gap: 10,
       },

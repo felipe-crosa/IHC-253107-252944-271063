@@ -22,13 +22,19 @@ export const GroupDetailEventsTab = ({ upcomingEvents, pastEvents } : GroupDetai
                         <Text style={styles.createButtonText}>Create</Text>
                     </Pressable>
                 </View>
-                {upcomingEvents.map(event => { 
+                {upcomingEvents.length === 0 && (
+                    <Text style={styles.noDataLabel}>No upcoming events</Text>
+                )}
+                {upcomingEvents.length > 0 && upcomingEvents.map(event => { 
                     return <GroupDetailEventCard event={event} isUpcoming={true} />
                 })}
             </View>
            
             <View style={styles.eventsSection}>
                 <Text style={styles.sectionTitle}>Past Events</Text>
+                {pastEvents.length === 0 && (
+                    <Text style={styles.noDataLabel}>No past events</Text>
+                )}
                 {pastEvents.map(event => { 
                     return <GroupDetailEventCard event={event} isUpcoming={false} />
                 })}
@@ -79,6 +85,10 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginLeft: 4,
     },
+    noDataLabel: {
+        color: '#6B7280', 
+        fontSize: 16 
+    }
     
 
 })

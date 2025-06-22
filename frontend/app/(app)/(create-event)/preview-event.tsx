@@ -24,6 +24,7 @@ export default function SelectGroupScreen() {
     const handleSubmit = async () => {
         try {
           await submitEvent();
+          router.push('/');
         } catch (error: any) {
             showMessage({
                 message: error.message || "An error occurred while creating the event.",

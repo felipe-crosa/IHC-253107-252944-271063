@@ -57,10 +57,10 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                         end={{ x: 1, y: 1 }}
                         style={styles.groupIcon}
                     >
-                        <Text style={styles.iconText}>{getInitials(invite.name)}</Text>
+                        <Text style={styles.iconText}>{getInitials(invite.group.name)}</Text>
                     </LinearGradient>
                     <View style={styles.groupDetails}>
-                        <Text style={styles.title}>{invite.name}</Text>
+                        <Text style={styles.title}>{invite.group.name}</Text>
                         <Text style={styles.details}>Details</Text>
                     </View>
                 </View>

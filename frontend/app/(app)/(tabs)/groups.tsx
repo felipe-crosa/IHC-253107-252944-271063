@@ -64,7 +64,7 @@ export default function GroupsScreen() {
       <ScrollView style={styles.scrollContent}>
    
         <View style={styles.groupCards}>
-          {groups.map((group) => (
+          {groups.length > 0 && groups.map((group) => (
             <GroupCard key={group.id} group={group} />
           ))}
         </View>

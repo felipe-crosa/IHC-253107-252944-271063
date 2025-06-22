@@ -27,6 +27,7 @@ class UpdateEventAction
             'category',
             'messages.sender',
             'images.user',
+            'polls.options'
         ]);
 
         return $event;
