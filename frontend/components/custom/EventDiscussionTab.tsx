@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, Pressable, FlatList } from 'react-na
 import { Message } from '@/app/types/message';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { User } from '@/app/types/user';
+import { useAuthStore } from '@/app/stores/useAuthStore';
 
 interface EventDiscussionTabProps {
     messages: Message[];
@@ -11,6 +12,7 @@ interface EventDiscussionTabProps {
 
 export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionTabProps) => {
     const [newMessage, setNewMessage] = useState('');
+    const { user } = useAuthStore();
 
     const handleSend = () => {
         if (newMessage.trim()) {
@@ -19,24 +21,36 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
         }
     };
 
-    const renderMessage = ({ item }: { item: Message }) => (
-        <View style={styles.messageContainer}>
-            <View style={styles.avatar}>
-                <Text style={styles.avatarText}>{(item.sender)?.name.charAt(0)}</Text>
+    const renderMessage = ({ item }: { item: Message }) => {
+        const isMyMessage = item.sender.id === user?.id;
+
+        return (
+            <View style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.otherMessageRow]}>
+                {!isMyMessage && (
+                    <View style={styles.avatar}>
+                        <Text style={styles.avatarText}>{(item.sender as User)?.name.charAt(0)}</Text>
+                    </View>
+                )}
+                <View style={[styles.messageContainer, isMyMessage ? styles.myMessageContainer : styles.otherMessageContainer]}>
+                    {!isMyMessage && <Text style={styles.userName}>{(item.sender as User)?.name}</Text>}
+                    <Text style={styles.messageText}>{item.content}</Text>
+                    <Text style={styles.messageTime}>{new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+                </View>
+                {isMyMessage && (
+                     <View style={[styles.avatar, styles.myAvatar]}>
+                        <Text style={styles.myAvatarText}>Me</Text>
+                    </View>
+                )}
             </View>
-            <View style={styles.messageContent}>
-                <Text style={styles.userName}>{(item.sender)?.name}</Text>
-                <Text style={styles.messageText}>{item.content}</Text>
-            </View>
-        </View>
-    );
+        );
+    };
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={messages}
                 renderItem={renderMessage}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item, index) => item.id?.toString() || index.toString()}
                 inverted
                 style={styles.messagesList}
                 contentContainerStyle={{ flexDirection: 'column-reverse' }}
@@ -50,7 +64,7 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
                     placeholderTextColor="#9ca3af"
                 />
                 <Pressable onPress={handleSend} style={styles.sendButton}>
-                    <Ionicons name="send" size={24} color="white" />
+                    <Ionicons name="paper-plane-outline" size={20} color="white" />
                 </Pressable>
             </View>
         </View>
@@ -60,40 +74,72 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f3f4f6',
+        backgroundColor: 'white',
+        borderBottomLeftRadius: 12,
+        borderBottomRightRadius: 12,
     },
     messagesList: {
+        flex: 1,
         paddingHorizontal: 16,
+        paddingVertical: 16,
     },
-    messageContainer: {
+    messageRow: {
         flexDirection: 'row',
         marginVertical: 10,
+        alignItems: 'flex-end',
+    },
+    myMessageRow: {
+        justifyContent: 'flex-end',
+    },
+    otherMessageRow: {
+        justifyContent: 'flex-start',
     },
     avatar: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#8200DB',
+        backgroundColor: '#f3f4f6',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+    },
+    myAvatar: {
+        backgroundColor: '#F3E8FF',
+        marginLeft: 8,
     },
     avatarText: {
-        color: 'white',
+        color: '#4b5563',
         fontWeight: 'bold',
     },
-    messageContent: {
-        flex: 1,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 10,
+    myAvatarText: {
+        color: '#8200DB',
+    },
+    messageContainer: {
+        borderRadius: 18,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        maxWidth: '75%',
+    },
+    myMessageContainer: {
+        backgroundColor: '#F3E8FF',
+    },
+    otherMessageContainer: {
+        backgroundColor: '#f3f4f6',
+        marginLeft: 10,
     },
     userName: {
         fontWeight: 'bold',
-        marginBottom: 5,
+        marginBottom: 4,
+        color: '#1f2937',
     },
     messageText: {
         fontSize: 16,
+        color: '#1f2937',
+    },
+    messageTime: {
+        fontSize: 10,
+        color: '#6b7280',
+        alignSelf: 'flex-end',
+        marginTop: 4,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -101,7 +147,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderTopWidth: 1,
         borderTopColor: '#e5e7eb',
-        backgroundColor: 'white',
     },
     input: {
         flex: 1,
