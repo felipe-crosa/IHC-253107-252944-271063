@@ -20,8 +20,6 @@ interface AuthState {
   initialize: () => void;
 }
 
-let interceptorSetup = false;
-
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -48,7 +46,7 @@ export const useAuthStore = create<AuthState>()(
             tokenExpiresAt,
           });
 
-          setupInterceptorsOnce(() => authToken); // <- 💥 Acá pasás getToken como función
+          axios.defaults.headers.common['Authorization'] = authToken;
 
           const userProfile = await authenticationService.profile();
 
@@ -84,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
 
         if (token && tokenExpiresAt && tokenExpiresAt > now && user) {
           axios.defaults.headers.common['Authorization'] = token;
-          setupInterceptorsOnce(() => token);
+          setupAxiosInterceptors(axios, () => useAuthStore.getState().token);
           set({ isLoggedIn: true, isLoading: false });
         } else {
           get().signOut();
@@ -105,13 +103,6 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
-
-function setupInterceptorsOnce(getToken: () => string | null) {
-  if (!interceptorSetup) {
-    setupAxiosInterceptors(axios, getToken);
-    interceptorSetup = true;
-  }
-}
 
 export function initializeAxiosInterceptor() {
   useAuthStore.getState().initialize();

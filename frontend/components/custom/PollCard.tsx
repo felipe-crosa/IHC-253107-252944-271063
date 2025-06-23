@@ -8,19 +8,30 @@ import React from 'react';
 
 export interface PollCardProps {
     poll: Poll;
-    onVote: (pollId: number, optionId: number) => void;
+    onVote: (pollId: number, optionIds: number[]) => void;
 }
 
 export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleVote = async () => {
-        if (!selectedOption) return;
+    function handleSelect(optionId: number) {
+        if (poll.multiple_choice) {
+            setSelectedOptions(prev =>
+                prev.includes(optionId)
+                    ? prev.filter(id => id !== optionId)
+                    : [...prev, optionId]
+            );
+        } else {
+            setSelectedOptions([optionId]);
+        }
+    }
 
+    const handleVote = async () => {
+        if (selectedOptions.length === 0) return;
         setIsSubmitting(true);
         try {
-            await onVote(poll.id, selectedOption);
+            await onVote(poll.id, selectedOptions);
         } catch (error) {
             console.error("Failed to vote:", error);
         } finally {
@@ -64,24 +75,35 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
                 ) : (
                     // Voting view
                     <>
-                        {poll.options.map((option: Option) => (
-                            <Pressable
-                                key={option.id}
-                                style={[styles.optionButton, selectedOption === option.id && styles.selectedOption]}
-                                onPress={() => setSelectedOption(option.id)}
-                            >
-                                <Ionicons
-                                    name={selectedOption === option.id ? 'radio-button-on' : 'radio-button-off'}
-                                    size={24}
-                                    color={selectedOption === option.id ? '#8200DB' : '#6b7280'}
-                                />
-                                <Text style={styles.optionButtonText}>{option.name}</Text>
-                            </Pressable>
-                        ))}
+                        {poll.options.map((option: Option) => {
+                            const isSelected = selectedOptions.includes(option.id);
+                            return (
+                                <Pressable
+                                    key={option.id}
+                                    style={[styles.optionButton, isSelected && styles.selectedOption]}
+                                    onPress={() => handleSelect(option.id)}
+                                >
+                                    <Ionicons
+                                        name={
+                                            poll.multiple_choice
+                                                ? isSelected
+                                                    ? 'checkbox'
+                                                    : 'square-outline'
+                                                : isSelected
+                                                    ? 'radio-button-on'
+                                                    : 'radio-button-off'
+                                        }
+                                        size={24}
+                                        color={isSelected ? '#8200DB' : '#6b7280'}
+                                    />
+                                    <Text style={styles.optionButtonText}>{option.name}</Text>
+                                </Pressable>
+                            );
+                        })}
                         <Pressable
-                            style={[styles.voteButton, !selectedOption && styles.disabledButton]}
+                            style={[styles.voteButton, selectedOptions.length === 0 && styles.disabledButton]}
                             onPress={handleVote}
-                            disabled={!selectedOption || isSubmitting}
+                            disabled={selectedOptions.length === 0 || isSubmitting}
                         >
                             <Text style={styles.voteButtonText}>{isSubmitting ? 'Voting...' : 'Vote'}</Text>
                         </Pressable>

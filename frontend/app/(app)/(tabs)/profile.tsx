@@ -214,5 +214,20 @@ const styles = StyleSheet.create({
       tabContent: {
         padding: 20,
       },
-    
+      logoutButton: {
+        width: '100%',
+        backgroundColor: '#fff',
+        borderColor: '#D1D5DC',
+        borderWidth: 1,
+        borderRadius: 12,
+        paddingVertical: 14,
+        alignItems: 'center',
+        marginTop: 32,
+        marginBottom: 32,
+      },
+      logoutButtonText: {
+        color: '#6A7282',
+        fontWeight: '600',
+        fontSize: 16,
+      },
 });

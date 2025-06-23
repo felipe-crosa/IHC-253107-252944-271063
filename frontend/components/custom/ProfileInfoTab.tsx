@@ -2,12 +2,14 @@ import { User } from '@/app/types/user';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { ProfileInfoCard } from './ProfileInfoCard';
+import { useAuthStore } from '@/app/stores/useAuthStore';
 
 interface ProfileInfoTabProps {
     user: User;
 }
 
 export const ProfileInfoTab = ({ user } : ProfileInfoTabProps) => {
+    const { signOut } = useAuthStore();
     return (
         <View style={styles.tabContent}>
             <Pressable style={styles.editProfileButton}>
@@ -30,7 +32,6 @@ export const ProfileInfoTab = ({ user } : ProfileInfoTabProps) => {
                 </View>
                 <View style={styles.detailsSection}>
                     <ProfileInfoCard value={user.email} hasEdit={false} hasArrow={true} />
-                    <ProfileInfoCard value={user.phone} hasEdit={false} hasArrow={true} />
                 </View>
             </View>
 
@@ -45,8 +46,8 @@ export const ProfileInfoTab = ({ user } : ProfileInfoTabProps) => {
 
             </View>
 
-            <Pressable style={styles.logoutButton}>
-                <Text style={styles.logoutText}>Log Out</Text>
+            <Pressable style={styles.logoutButton} onPress={() => useAuthStore.getState().signOut()}>
+                <Text style={styles.logoutButtonText}>Log Out</Text>
             </Pressable>
         </View>
     );
@@ -96,15 +97,17 @@ const styles = StyleSheet.create({
         gap: 16,
       },
       logoutButton: {
-        backgroundColor: 'white',
+        width: '100%',
+        backgroundColor: '#fff',
+        borderColor: '#D1D5DC',
+        borderWidth: 1,
         borderRadius: 12,
-        padding: 16,
+        paddingVertical: 14,
         alignItems: 'center',
-        marginTop: 20,
       },
-      logoutText: {
-        fontSize: 16,
-        color: '#EF4444',
+      logoutButtonText: {
+        color: '#6A7282',
         fontWeight: '600',
+        fontSize: 16,
       },
 });

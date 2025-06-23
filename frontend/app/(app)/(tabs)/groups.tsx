@@ -9,6 +9,8 @@ import * as groupsService from '@/app/services/groups.service';
 import * as invitesService from '@/app/services/invites.service';
 import { Invite } from '@/app/types/invite';
 import { InviteCard } from '@/components/custom/InviteCard';
+import React from 'react';
+
 
 export default function GroupsScreen() {
   const [groups, setGroups] = useState<Group[]>([]);
@@ -64,16 +66,24 @@ export default function GroupsScreen() {
       <ScrollView style={styles.scrollContent}>
    
         <View style={styles.groupCards}>
-          {groups.length > 0 && groups.map((group) => (
-            <GroupCard key={group.id} group={group} />
-          ))}
+          {groups.length > 0 ? (
+            groups.map((group) => (
+              <GroupCard key={group.id} group={group} />
+            ))
+          ) : (
+            <Text style={styles.emptyStateText}>You currently belong to no groups.</Text>
+          )}
         </View>
         <View style={styles.invitationsSection}>
           <Text style={styles.invitationTitle}>Invitations</Text>
           <View style={styles.invitationCards}>
-            {invites.length > 0 && invites.map((invite) => (
-              <InviteCard key={`${invite.id}-invite`} invite={invite} />
-            ))}
+            {invites.length > 0 ? (
+              invites.map((invite) => (
+                <InviteCard key={`${invite.id}-invite`} invite={invite} />
+              ))
+            ) : (
+              <Text style={styles.emptyStateText}>You have no invitations.</Text>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -147,5 +157,51 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 5,
-  }
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    gap: 16,
+  },
+  emptyStateIconWrapper: {
+    borderRadius: 999,
+    width: 88,
+    height: 88,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  emptyStateTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#23272F',
+    marginTop: 8,
+  },
+  emptyStateSubtitle: {
+    fontSize: 16,
+    color: '#6A7282',
+    marginBottom: 8,
+  },
+  emptyStateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#8200DB',
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginTop: 8,
+    gap: 8,
+  },
+  emptyStateButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  emptyStateText: {
+    fontSize: 16,
+    color: '#6A7282',
+    marginLeft: 4,
+    fontWeight: '500',
+  },
 });

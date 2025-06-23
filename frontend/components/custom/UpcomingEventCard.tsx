@@ -21,7 +21,7 @@ export const UpcomingEventCard = ({ event } : UpcomingEventCardProps) => {
                 {event.group_id} • {event.start_at}
                 </Text>
             </View>
-            <Text style={styles.attendeesText}>8 going</Text>
+            <Text style={styles.attendeesText}>{event.confirmed_attendees.length} going</Text>
         </Pressable>
     );
 }
