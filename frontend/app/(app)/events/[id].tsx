@@ -8,9 +8,9 @@ import { Event } from "@/app/types/event";
 import * as eventsService from "@/app/services/events.service";
 import * as messagesService from "@/app/services/messages.service";
 import { Message } from "@/app/types/message";
-import { EventDiscussionTab } from "@/app/components/custom/EventDiscussionTab";
-import { EventPhotosTab } from "@/app/components/custom/EventPhotosTab";
-import { EventPollsTab } from "@/app/components/custom/EventPollsTab";
+import { EventPollsTab } from "@/components/custom/EventPollsTab";
+import { EventDiscussionTab } from "@/components/custom/EventDiscussionTab";
+import { EventPhotosTab } from "@/components/custom/EventPhotosTab";
 
 const TABS = {
     Discussion: 'Discussion',
@@ -72,8 +72,7 @@ export default function EventDetailsPage() {
     }
 
     const handleCreatePoll = () => {
-        // TODO: Implement create poll navigation
-        console.log("Create poll pressed");
+        router.push(`/create-poll?eventId=${event?.id}`);
     }
 
     useEffect(() => {
@@ -142,7 +141,7 @@ export default function EventDetailsPage() {
                         <EventPhotosTab images={event.images || []} onAddPhoto={handleAddPhoto} />
                     }
                     {activeTab === TABS.Polls &&
-                        <EventPollsTab polls={event.polls || []} onVote={handleVote} onCreatePoll={handleCreatePoll} />
+                        <EventPollsTab />
                     }
                 </ScrollView>
 
