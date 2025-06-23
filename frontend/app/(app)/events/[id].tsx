@@ -10,6 +10,7 @@ import * as messagesService from "@/app/services/messages.service";
 import { Message } from "@/app/types/message";
 import { EventDiscussionTab } from "@/app/components/custom/EventDiscussionTab";
 import { EventPhotosTab } from "@/app/components/custom/EventPhotosTab";
+import { EventPollsTab } from "@/app/components/custom/EventPollsTab";
 
 const TABS = {
     Discussion: 'Discussion',
@@ -63,6 +64,16 @@ export default function EventDetailsPage() {
     const handleAddPhoto = () => {
         // TODO: Implement image picker logic
         console.log("Add photo pressed");
+    }
+
+    const handleVote = (pollId: number, optionId: number) => {
+        // TODO: Implement voting logic
+        console.log(`Voted for option ${optionId} in poll ${pollId}`);
+    }
+
+    const handleCreatePoll = () => {
+        // TODO: Implement create poll navigation
+        console.log("Create poll pressed");
     }
 
     useEffect(() => {
@@ -130,7 +141,9 @@ export default function EventDetailsPage() {
                     {activeTab === TABS.Photos && 
                         <EventPhotosTab images={event.images || []} onAddPhoto={handleAddPhoto} />
                     }
-                    {activeTab === TABS.Polls && <Text>Polls</Text>}
+                    {activeTab === TABS.Polls &&
+                        <EventPollsTab polls={event.polls || []} onVote={handleVote} onCreatePoll={handleCreatePoll} />
+                    }
                 </ScrollView>
 
                 </ScrollView>
