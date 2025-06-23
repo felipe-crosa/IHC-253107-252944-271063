@@ -1,14 +1,16 @@
 import { View, Text, TouchableOpacity, StyleSheet, Pressable } from "react-native";
 import { Event } from "@/app/types/event";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 
 interface RecentEventCardProps {
     event: Event;
 }
 
 export const RecentEventCard = ({ event } : RecentEventCardProps) => {
+    const router = useRouter();
     return (
-        <View key={event.id} style={styles.recentEventItem}>
+        <Pressable key={event.id} style={styles.recentEventItem} onPress={() => router.push(`/events/${event.id}`)}>
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
@@ -28,7 +30,7 @@ export const RecentEventCard = ({ event } : RecentEventCardProps) => {
                     <Text style={styles.viewPhotosText}>View all 24 photos</Text>
                 </Pressable>
             </View>
-        </View>
+        </Pressable>
     );
 }
 

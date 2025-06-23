@@ -9,6 +9,7 @@ import * as eventsService from "@/app/services/events.service";
 import * as messagesService from "@/app/services/messages.service";
 import { Message } from "@/app/types/message";
 import { EventDiscussionTab } from "@/app/components/custom/EventDiscussionTab";
+import { EventPhotosTab } from "@/app/components/custom/EventPhotosTab";
 
 const TABS = {
     Discussion: 'Discussion',
@@ -57,6 +58,11 @@ export default function EventDetailsPage() {
                 type: "danger",
             })
         }
+    }
+
+    const handleAddPhoto = () => {
+        // TODO: Implement image picker logic
+        console.log("Add photo pressed");
     }
 
     useEffect(() => {
@@ -121,7 +127,9 @@ export default function EventDetailsPage() {
                     {activeTab === TABS.Discussion &&
                         <EventDiscussionTab messages={event.messages || []} onSendMessage={handleSendMessage} />
                     }
-                    {activeTab === TABS.Photos && <Text>Photos</Text>}
+                    {activeTab === TABS.Photos && 
+                        <EventPhotosTab images={event.images || []} onAddPhoto={handleAddPhoto} />
+                    }
                     {activeTab === TABS.Polls && <Text>Polls</Text>}
                 </ScrollView>
 
