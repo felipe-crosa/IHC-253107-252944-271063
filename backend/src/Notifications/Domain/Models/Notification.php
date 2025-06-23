@@ -33,5 +33,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Notification extends Model
 {
-    protected $dd  = ['id'];
+    protected $id  = ['id'];
 }
