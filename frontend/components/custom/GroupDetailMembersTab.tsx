@@ -1,24 +1,47 @@
 import { User } from "@/app/types/user";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { getInitials } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MemberCard } from "./MemberCard";
+import { InviteMemberModal } from "./InviteMemberModal";
+import React, { useState } from "react";
+import { showMessage } from "react-native-flash-message";
+import * as invitesService from "@/app/services/invites.service";
 
 interface GroupDetailMembersTabProps {
-    members?: User[]
+    members?: User[];
+    groupId: number;
 }
 
-export const GroupDetailMembersTab = ({ members = [] } : GroupDetailMembersTabProps) => {
+export const GroupDetailMembersTab = ({ members = [], groupId }: GroupDetailMembersTabProps) => {
+    const [isModalVisible, setModalVisible] = useState(false);
+
     const isOwner = (user: User) => {
         // For now, show the first user as owner
         return members.indexOf(user) === 0;
+    };
+
+    const handleInvite = async (email: string) => {
+        try {
+            await invitesService.create(groupId, { email });
+            showMessage({
+                message: "Invitation sent successfully!",
+                type: "success",
+            });
+        } catch (error) {
+            showMessage({
+                message: "Failed to send invitation.",
+                type: "danger",
+            });
+        } finally {
+            setModalVisible(false);
+        }
     };
 
     return (
         <View style={styles.tabContent}>
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Members ({members.length})</Text>
-                <Pressable style={styles.inviteButton}>
+                <Pressable style={styles.inviteButton} onPress={() => setModalVisible(true)}>
                     <Ionicons name="person-add" size={20} color="#8200DB" />
                     <Text style={styles.inviteButtonText}>Invite</Text>
                 </Pressable>
@@ -43,6 +66,12 @@ export const GroupDetailMembersTab = ({ members = [] } : GroupDetailMembersTabPr
                     ))}
                 </View>
             )}
+
+            <InviteMemberModal 
+                isVisible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                onInvite={handleInvite}
+            />
         </View>
     );
 }

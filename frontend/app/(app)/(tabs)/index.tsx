@@ -59,25 +59,37 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <Text style={styles.subtitle}>ACTION REQUIRED</Text>
           <View style={styles.events}>
-            {actionRequiredEvents.map((event) => (
-              <ActionRequiredEventCard key={event.id} event={event} handleAcceptAction={handleAcceptAction} handleRejectAction={handleRejectAction}/>
-            ))}
+            {actionRequiredEvents.length > 0 ? (
+              actionRequiredEvents.map((event) => (
+                <ActionRequiredEventCard key={event.id} event={event} handleAcceptAction={handleAcceptAction} handleRejectAction={handleRejectAction}/>
+              ))
+            ) : (
+              <Text style={styles.emptyListText}>No actions required at the moment.</Text>
+            )}
           </View>
         </View>
         <View style={styles.section}>
           <Text style={styles.subtitle}>UPCOMING EVENTS</Text>
           <View style={styles.events}>
-            {upcomingEvents.map((event) => (
-              <UpcomingEventCard key={event.id} event={event} />
-            ))}
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <UpcomingEventCard key={event.id} event={event} />
+              ))
+            ) : (
+              <Text style={styles.emptyListText}>No upcoming events scheduled.</Text>
+            )}
           </View>
         </View>
         <View style={styles.section}>
           <Text style={styles.subtitle}>RECENT EVENTS</Text>
           <View style={styles.events}>
-            {recentEvents.map((event) => (
-              <RecentEventCard key={event.id} event={event} />
-            ))}
+            {recentEvents.length > 0 ? (
+              recentEvents.map((event) => (
+                <RecentEventCard key={event.id} event={event} />
+              ))
+            ) : (
+              <Text style={styles.emptyListText}>No recent events to show.</Text>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -128,5 +140,9 @@ const styles = StyleSheet.create({
     gap: 10,
 
   },
-
+  emptyListText: {
+    color: '#6A7282',
+    marginTop: 10,
+    fontSize: 14,
+  },
 });

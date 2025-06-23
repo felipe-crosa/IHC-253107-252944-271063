@@ -65,8 +65,8 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                     </View>
                 </View>
                 <ActionButtons 
-                    handleAccept={() => handleAcceptInvite(invite.id)} 
-                    handleReject={() => handleRejectInvite(invite.id)} />
+                    handleAccept={() => handleRejectInvite(invite.id)} 
+                    handleReject={() => handleAcceptInvite(invite.id)} />
                 
         </View>
         </>

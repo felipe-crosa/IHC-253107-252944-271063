@@ -19,6 +19,10 @@ const TABS = {
 
 type Tabs = (typeof TABS)[keyof typeof TABS];
 
+type GroupDetailsPageParams = {
+    id: string;
+};
+
 export default function GroupDetailsPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
@@ -64,9 +68,12 @@ export default function GroupDetailsPage() {
     }
 
     useEffect(() => {
-        getGroup(id as string);
-        getEvents(id as string);
-        getMembers(id as string);
+        if (typeof id !== 'string') {
+            return;
+        }
+        getGroup(id);
+        getEvents(id);
+        getMembers(id);
     }, [id]);
 
     if (!id || !group) {
@@ -116,7 +123,7 @@ export default function GroupDetailsPage() {
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                     {activeTab === TABS.Events ? 
                         <GroupDetailEventsTab pastEvents={getPastEvents(events)} upcomingEvents={getUpcomingEvents(events)} /> : 
-                        <GroupDetailMembersTab members={members} />}
+                        <GroupDetailMembersTab members={members} groupId={group.id} />}
                 </ScrollView>
 
                 </ScrollView>

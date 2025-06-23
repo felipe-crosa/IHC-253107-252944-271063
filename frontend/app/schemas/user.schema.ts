@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { groupSchema } from './group.schema';
 
 export const userSchema = z.object({
     id: z.number(),
@@ -7,5 +6,5 @@ export const userSchema = z.object({
     email: z.string(),
     password: z.string(),
     phone: z.string(),
-    groups: z.array(groupSchema),
+    groups: z.array(z.lazy(() => groupSchema)),
 });

@@ -7,3 +7,9 @@ export const inviteSchema = z.object({
     user: z.lazy(() => userSchema),
     group: z.lazy(() => groupSchema),
 }); 
+
+export const CreateInviteSchema = z.object({
+    email: z.string().email(),
+});
+
+export type CreateInviteData = z.infer<typeof CreateInviteSchema>;
