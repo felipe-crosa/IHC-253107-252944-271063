@@ -39,7 +39,7 @@ class CreateEventAction
         );
 
         Participant::where('event_id', $event->id)
-            ->whereIn('user_id', $groupMembers->pluck('id'))
+            ->where('user_id', $user->id)
             ->update(['status' => ParticipationStatus::ACCEPTED]);
 
         $event->load([
