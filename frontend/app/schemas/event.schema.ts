@@ -13,9 +13,9 @@ export const eventSchema = z.object({
     group_id: z.number(),
     category: categorySchema,
     messages: z.array(messageSchema),
-    confirmed_attendees: z.array(userSchema),
-    pending_attendees: z.array(userSchema),
-    cancelled_attendees: z.array(userSchema),
+    confirmed_attendees: z.array(z.lazy(() => userSchema)),
+    pending_attendees: z.array(z.lazy(() => userSchema)),
+    cancelled_attendees: z.array(z.lazy(() => userSchema)),
     images: z.array(z.string()),
     polls: z.array(pollSchema),
 });

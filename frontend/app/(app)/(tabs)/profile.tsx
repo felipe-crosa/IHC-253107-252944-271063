@@ -4,8 +4,14 @@ import { ProfileEventsTab } from '@/components/custom/ProfileEventsTab';
 import { ProfileGroupsTab } from '@/components/custom/ProfileGroupsTab';
 import { ProfileInfoTab } from '@/components/custom/ProfileInfoTab';
 import { UserStats } from '@/components/custom/UserStats';
-import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { getInitials } from '@/helpers/format-text.helper';
+import * as groupsService from '@/app/services/groups.service';
+import * as eventsService from '@/app/services/events.service';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
+import { Event } from '@/app/types/event';
+import { ProfilePhotosTab } from '@/components/custom/ProfilePhotosTab';
 
 const TABS = {
     EVENTS: 'Events',
@@ -15,69 +21,100 @@ const TABS = {
 
 type TabType = (typeof TABS)[keyof typeof TABS];
 
-const GROUPS: Group[] = [
-    {
-      id: 101,
-      name: 'Hiking Buddies',
-      description: 'A group for planning hikes and outdoor adventures.',
-      owner_id: 1,
-      invites: [],
-      created_at: '2024-01-15T10:00:00Z',
-      events: [],
-      members: [],
-    },
-    {
-      id: 102,
-      name: 'Foodies United',
-      description: 'We explore new restaurants every month.',
-      owner_id: 1,
-      invites: [],
-      created_at: '2024-02-10T13:45:00Z',
-      events: [],
-      members: [],
-    },
-  ]
-
 export default function ProfileScreen() {
     const { user } = useAuthStore();
     const [activeTab, setActiveTab] = useState<TabType>(TABS.EVENTS);
+    const [groups, setGroups] = useState<Group[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
-  return (
-    <View style={styles.container}>
-        <View style={styles.blockHeading}/>
-        <View style={styles.profileImage}>
-            <Text style={styles.profileImageText}>JD</Text>
-        </View>
-        <View style={styles.content}>
-            <View style={styles.userNameSection}>
-                <Text style={styles.userNameLbl}>{user!.name}</Text>
-                <Text style={styles.userEmailLbl}>{user!.email}</Text>
+    const photos = events.flatMap(event => event.images || []);
+
+    const getGroups = async () => {
+        setIsLoading(true);
+        try {
+            const response = await groupsService.getAll();
+            setGroups(response);
+        } catch (error) {
+            showMessage({
+                message: 'Error fetching groups',
+                type: 'danger',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const getEvents = async () => {
+        setIsLoading(true);
+        try {
+            const response = await eventsService.getAll();
+            setEvents(response);
+        } catch (error) {
+            showMessage({
+                message: 'Error fetching events',
+                type: 'danger',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        getGroups();
+        getEvents();
+    }, []);
+
+    if (isLoading || !user) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <ActivityIndicator size="large" color="#8200DB" />
             </View>
-            <UserStats eventsCount={12} groupsCount={4} photosCount={87}/>
-            <ScrollView style={styles.tabContainer}>
-                <View style={styles.tabHeadings}>
-                    {Object.values(TABS).map((tab) => (
-                        <Pressable
-                            key={tab}
-                            style={[styles.tab, activeTab === tab && styles.activeTab]}
-                            onPress={() => setActiveTab(tab)}
-                            >
-                            <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
-                                {tab}
-                            </Text>
-                        </Pressable>
-                    ))}
+        );
+    }
+
+    return (
+        <>
+        <FlashMessage position="top" />
+        <View style={styles.container}>
+            <View style={styles.blockHeading}/>
+            <View style={styles.profileImage}>
+                <Text style={styles.profileImageText}>{getInitials(user.name)}</Text>
+            </View>
+            <View style={styles.content}>
+                <View style={styles.userNameSection}>
+                    <Text style={styles.userNameLbl}>{user.name}</Text>
+                    <Text style={styles.userEmailLbl}>{user.email}</Text>
                 </View>
-                <ScrollView style={styles.scrollView} >
-                    {activeTab === TABS.EVENTS && <ProfileEventsTab />}
-                    {activeTab === TABS.GROUPS && <ProfileGroupsTab groups={GROUPS} />}
-                    {activeTab === TABS.INFO && <ProfileInfoTab user={user!}/>}
-                </ScrollView>  
-            </ScrollView>
-           
+                <UserStats
+                    eventsCount={events.length || 0}
+                    groupsCount={groups.length || 0}
+                    photosCount={87}
+                />
+                <ScrollView style={styles.tabContainer}>
+                    <View style={styles.tabHeadings}>
+                        {Object.values(TABS).map((tab) => (
+                            <Pressable
+                                key={tab}
+                                style={[styles.tab, activeTab === tab && styles.activeTab]}
+                                onPress={() => setActiveTab(tab)}
+                            >
+                                <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+                                    {tab}
+                                </Text>
+                            </Pressable>
+                        ))}
+                    </View>
+                    <ScrollView style={styles.scrollView} >
+                        {activeTab === TABS.EVENTS && <ProfilePhotosTab photos={photos || []}/>}
+                        {activeTab === TABS.GROUPS && <ProfileGroupsTab groups={groups || []} />}
+                        {activeTab === TABS.INFO && <ProfileInfoTab user={user} />}
+                    </ScrollView>  
+                </ScrollView>
+            </View>
         </View>
-    </View>
-  );
+        </>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -87,6 +124,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: 250,
         flex: 1,
+    },
+    centered: {
+        paddingTop: 0,
+        justifyContent: 'center',
     },
     blockHeading: {
         position: 'absolute',

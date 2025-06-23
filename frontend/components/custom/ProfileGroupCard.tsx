@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
         borderColor: '#F3F4F6',
         padding: 16,
         maxWidth: 140,
+        height: 170,
     },
     groupIcon: {
         width: 48,
