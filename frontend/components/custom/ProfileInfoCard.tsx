@@ -5,25 +5,15 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 interface ProfileInfoCardProps {
     title?: string;
     value?: string;
-    hasEdit?: boolean;
-    hasArrow?: boolean;
 }
 
-export const ProfileInfoCard = ({ title, value, hasEdit, hasArrow } : ProfileInfoCardProps) => {
+export const ProfileInfoCard = ({ title, value } : ProfileInfoCardProps) => {
     return (
         <View style={styles.infoItem}>
             <View style={styles.infoContent}>
                 {title && <Text style={styles.infoTitle}>{title}</Text>}
                 {value && <Text style={styles.infoValue}>{value}</Text>}
             </View>
-            {hasEdit && (
-                <Pressable style={styles.editButton}>
-                    <SimpleLineIcons name="pencil" size={18} color="#8200DB" />
-                </Pressable>
-            )}
-            {hasArrow && (
-                <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
-            )}
         </View>
     )
 }

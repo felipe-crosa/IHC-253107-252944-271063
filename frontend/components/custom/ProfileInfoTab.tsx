@@ -12,38 +12,14 @@ export const ProfileInfoTab = ({ user } : ProfileInfoTabProps) => {
     const { signOut } = useAuthStore();
     return (
         <View style={styles.tabContent}>
-            <Pressable style={styles.editProfileButton}>
-                <Text style={styles.editProfileText}>Edit Profile</Text>
-            </Pressable>
 
             <View style={styles.infoSection}>
                 <View style={styles.titleSection}>
                     <Text style={styles.title}>Contact Information</Text>
                 </View>
                 <View style={styles.detailsSection}>
-                    <ProfileInfoCard title={'Email'} value={user.email} hasEdit={true} hasArrow={false} />
-                    <ProfileInfoCard title={'Phone'} value={user.phone} hasEdit={true} hasArrow={false} />
+                    <ProfileInfoCard title={'Email'} value={user.email}  />
                 </View>
-            </View>
-
-            <View style={styles.infoSection}>
-                <View style={styles.titleSection}>
-                    <Text style={styles.title}>Preferences</Text>
-                </View>
-                <View style={styles.detailsSection}>
-                    <ProfileInfoCard value={user.email} hasEdit={false} hasArrow={true} />
-                </View>
-            </View>
-
-            <View style={styles.infoSection}>
-                <View style={styles.titleSection}>
-                    <Text style={styles.title}>Account</Text>
-                </View>
-                <View style={styles.detailsSection}>
-                    <ProfileInfoCard title={'Change Password'} hasEdit={false} hasArrow={true} />
-                    <ProfileInfoCard title={'Linked Accounts'} hasEdit={false} hasArrow={true} />
-                </View>
-
             </View>
 
             <Pressable style={styles.logoutButton} onPress={() => useAuthStore.getState().signOut()}>

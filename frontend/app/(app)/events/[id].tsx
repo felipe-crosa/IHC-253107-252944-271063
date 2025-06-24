@@ -68,8 +68,26 @@ export default function EventDetailsPage() {
     const handleSendMessage = async (content: string) => {
         try {
             const response = await messagesService.createMessage(event?.id || 0, content);
-            setMessages(prev => [response, ...prev]);
+        
+            const messageWithSender = {
+                id: response.id || Date.now(),
+                sender_id: response.sender_id || user?.id || 0,
+                event_id: response.event_id || event?.id || 0,
+                content: response.content || content,
+                created_at: response.created_at || new Date().toISOString(),
+                sender: response.sender || user || { id: 0, name: 'Unknown User' }
+            };
+                        
+            setMessages(prev => [...prev, messageWithSender]);
+            
+            if (event) {
+                setEvent({
+                    ...event,
+                    messages: [...(event.messages || []), messageWithSender]
+                });
+            }
         } catch (error: any) {
+            console.error('Error sending message:', error);
             showMessage({
                 message: error.message || "An error occurred while sending the message.",
                 type: "danger",
@@ -114,66 +132,66 @@ export default function EventDetailsPage() {
                     </View>
                 </View>
             </View>
-            <View style={styles.containerBody}>
-                <EventAttendancePoll event={event} user={user!} onVoted={() => getEvent(event.id)} />
-                <ScrollView style={styles.tabs}>
-                    <View style={styles.tabContainer}>
-                        <Pressable
-                            style={[styles.tab, activeTab === TABS.Discussion && styles.activeTab]}
-                            onPress={() => setActiveTab(TABS.Discussion)}>
-                                <Text style={[styles.tabText, activeTab === TABS.Discussion && styles.activeTabText]}>
-                                    Discussion
-                                </Text>
-                        </Pressable>
-                        <Pressable
-                                style={[styles.tab, activeTab === TABS.Photos && styles.activeTab]}
-                                onPress={() => setActiveTab(TABS.Photos)}
-                            >
-                                <Text style={[styles.tabText, activeTab === TABS.Photos && styles.activeTabText]}>
-                                    Photos
-                                </Text>
-                        </Pressable>
-                        <Pressable
-                                style={[styles.tab, activeTab === TABS.Polls && styles.activeTab]}
-                                onPress={() => setActiveTab(TABS.Polls)}
-                            >
-                                <Text style={[styles.tabText, activeTab === TABS.Polls && styles.activeTabText]}>
-                                    Polls
-                                </Text>
-                        </Pressable>
+            <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+                <View style={styles.containerBody}>
+                    <EventAttendancePoll event={event} user={user!} onVoted={() => getEvent(event.id)} />
+                    
+                    <View style={styles.tabsWrapper}>
+                        <View style={styles.tabContainer}>
+                            <Pressable
+                                style={[styles.tab, activeTab === TABS.Discussion && styles.activeTab]}
+                                onPress={() => setActiveTab(TABS.Discussion)}>
+                                    <Text style={[styles.tabText, activeTab === TABS.Discussion && styles.activeTabText]}>
+                                        Discussion
+                                    </Text>
+                            </Pressable>
+                            <Pressable
+                                    style={[styles.tab, activeTab === TABS.Photos && styles.activeTab]}
+                                    onPress={() => setActiveTab(TABS.Photos)}
+                                >
+                                    <Text style={[styles.tabText, activeTab === TABS.Photos && styles.activeTabText]}>
+                                        Photos
+                                    </Text>
+                            </Pressable>
+                            <Pressable
+                                    style={[styles.tab, activeTab === TABS.Polls && styles.activeTab]}
+                                    onPress={() => setActiveTab(TABS.Polls)}
+                                >
+                                    <Text style={[styles.tabText, activeTab === TABS.Polls && styles.activeTabText]}>
+                                        Polls
+                                    </Text>
+                            </Pressable>
+                        </View>
+                        
+                        <View style={styles.tabContent}>
+                            {activeTab === TABS.Discussion &&
+                                <EventDiscussionTab messages={event.messages || []} onSendMessage={handleSendMessage} />
+                            }
+                            {activeTab === TABS.Photos && 
+                                <EventPhotosTab 
+                                    images={event.images || []} 
+                                    eventId={event.id}
+                                    onImageUploaded={handleImageUploaded}
+                                />
+                            }
+                            {activeTab === TABS.Polls &&
+                                <EventPollsTab />
+                            }
+                        </View>
                     </View>
-                    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-                    {activeTab === TABS.Discussion &&
-                        <EventDiscussionTab messages={event.messages || []} onSendMessage={handleSendMessage} />
-                    }
-                    {activeTab === TABS.Photos && 
-                        <EventPhotosTab 
-                            images={event.images || []} 
-                            eventId={event.id}
-                            onImageUploaded={handleImageUploaded}
-                        />
-                    }
-                    {activeTab === TABS.Polls &&
-                        <EventPollsTab />
-                    }
-                </ScrollView>
 
-                </ScrollView>
-            
-
-                <View style={styles.aboutSection}>
-                    <Text style={styles.aboutTitle}>Event Details</Text>
-                    <Text style={styles.aboutText}>
-                        { event.description }
-                    </Text>
-                    <View style={styles.locationSection}>
-                        <Ionicons name="location-outline" size={20} color="#364153" />
-                        <Text style={styles.aboutText}> {event.location}</Text>
+                    <View style={styles.aboutSection}>
+                        <Text style={styles.aboutTitle}>Event Details</Text>
+                        <Text style={styles.aboutText}>
+                            { event.description }
+                        </Text>
+                        <View style={styles.locationSection}>
+                            <Ionicons name="location-outline" size={20} color="#364153" />
+                            <Text style={styles.aboutText}> {event.location}</Text>
+                        </View>
                     </View>
                 </View>
-
-            </View>
-            
+            </ScrollView>
         </View>
         </>
     );
@@ -249,17 +267,23 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         color: 'white',
     },
+    tabsWrapper: {
+        width: '100%',
+        backgroundColor: 'white',
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+    },
     tabContainer: {
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#e5e7eb',
     },
-    scrollView: {
+    scrollContainer: {
         flex: 1,
         width: '100%',
+        marginTop: 180,
     },
     containerBody: {
-        flex: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -267,14 +291,10 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 20,
         backgroundColor: '#f3f4f6',
-        marginTop: 190,
-
+        paddingTop: 20,
     },
-    tabs:{
+    tabContent: {
         width: '100%',
-        backgroundColor: '#f3f4f6',
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
     },
     tab: {
         flex: 1,
@@ -282,9 +302,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 2,
         borderBottomColor: 'transparent',
-        backgroundColor: 'white',
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
     },
     activeTab: {
         borderBottomColor: '#8200DB',
@@ -307,7 +324,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         width: '100%',  
-        gap: 8,    
+        gap: 8,
+        marginBottom: 20,
     },
     aboutTitle: {
         fontSize: 18,

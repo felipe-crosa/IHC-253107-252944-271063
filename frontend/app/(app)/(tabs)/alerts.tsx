@@ -33,7 +33,6 @@ export default function AlertsTab() {
     setRefreshing(false);
   };
 
-  // Sort notifications by date (most recent first)
   const sortedNotifications = [...notifications].sort((a, b) => {
     const dateA = new Date(a.created_at || a.time_ago || 0).getTime();
     const dateB = new Date(b.created_at || b.time_ago || 0).getTime();

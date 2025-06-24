@@ -30,13 +30,13 @@ export const ProfilePhotosTab = ({ photos }: ProfilePhotosTabProps) => {
                 
                 return imageUrl ? (
                     <Image
-                        key={index}
+                        key={`photo-${index}-${imageUrl}`}
                         source={{ uri: imageUrl }}
                         style={styles.photoThumbnail}
                     />
                 ) : (
                     <LinearGradient
-                        key={index}
+                        key={`placeholder-${index}`}
                         colors={['#E9D4FF', '#DAB2FF']}
                         start={{ x: 1, y: 0 }}
                         end={{ x: 1, y: 1 }}

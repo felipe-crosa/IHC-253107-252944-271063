@@ -22,17 +22,29 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
     };
 
     const renderMessage = ({ item }: { item: Message }) => {
-        const isMyMessage = item.sender.id === user?.id;
+        if (!item || !item.sender) {
+            console.warn('Invalid message or sender:', item);
+            return null;
+        }
+        
+        if (!user) {
+            console.warn('No user available for message comparison');
+            return null;
+        }
+        
+        const isMyMessage = item.sender?.id === user?.id;
+        const senderName = item.sender?.name || 'Unknown User';
+        const senderInitial = senderName.charAt(0) || '?';
 
         return (
             <View style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.otherMessageRow]}>
                 {!isMyMessage && (
                     <View style={styles.avatar}>
-                        <Text style={styles.avatarText}>{(item.sender as User)?.name.charAt(0)}</Text>
+                        <Text style={styles.avatarText}>{senderInitial}</Text>
                     </View>
                 )}
                 <View style={[styles.messageContainer, isMyMessage ? styles.myMessageContainer : styles.otherMessageContainer]}>
-                    {!isMyMessage && <Text style={styles.userName}>{(item.sender as User)?.name}</Text>}
+                    {!isMyMessage && <Text style={styles.userName}>{senderName}</Text>}
                     <Text style={styles.messageText}>{item.content}</Text>
                     <Text style={styles.messageTime}>{new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
                 </View>

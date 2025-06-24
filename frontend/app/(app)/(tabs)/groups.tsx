@@ -41,6 +41,15 @@ export default function GroupsScreen() {
     }
   }
 
+  const handleInviteAccepted = () => {
+    getInvites();
+    getGroups(); 
+  };
+
+  const handleInviteRejected = () => {
+    getInvites();
+  };
+
   useEffect(() => {
     getGroups();
     getInvites();
@@ -79,7 +88,7 @@ export default function GroupsScreen() {
           <View style={styles.invitationCards}>
             {invites.length > 0 ? (
               invites.map((invite) => (
-                <InviteCard key={`${invite.id}-invite`} invite={invite} />
+                <InviteCard key={`${invite.id}-invite`} invite={invite} onInviteAccepted={handleInviteAccepted} onInviteRejected={handleInviteRejected} />
               ))
             ) : (
               <Text style={styles.emptyStateText}>You have no invitations.</Text>

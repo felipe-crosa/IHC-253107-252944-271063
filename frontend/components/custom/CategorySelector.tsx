@@ -28,6 +28,7 @@ export const CategorySelector = ({
           <View key={rowIndex} style={styles.categoryRow}>
             {row.map((category, categoryIndex) => 
               <CategoryButton 
+                key={category.id}
                 category={category} 
                 index={rowIndex * 4 + categoryIndex}
                 value={value}

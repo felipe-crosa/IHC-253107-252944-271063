@@ -9,9 +9,11 @@ import { ActionButtons } from "./ActionButtons";
 
 interface InviteCardProps {
     invite: Invite;
+    onInviteAccepted?: () => void;
+    onInviteRejected?: () => void;
 }
 
-export const InviteCard = ({ invite } : InviteCardProps) => {
+export const InviteCard = ({ invite, onInviteAccepted, onInviteRejected } : InviteCardProps) => {
     const handleAcceptInvite = async (inviteId: number) => {
         try {
             await invitesService.accept(inviteId);
@@ -19,6 +21,7 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                 message: "Invite accepted successfully.",
                 type: "success",
             });
+            onInviteAccepted?.();
 
         } catch (error: any) {
             showMessage({
@@ -35,6 +38,7 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                 message: "Invite rejected successfully.",
                 type: "success",
             });
+            onInviteRejected?.();
 
         } catch (error: any) {
             showMessage({
@@ -65,8 +69,8 @@ export const InviteCard = ({ invite } : InviteCardProps) => {
                     </View>
                 </View>
                 <ActionButtons 
-                    handleAccept={() => handleRejectInvite(invite.id)} 
-                    handleReject={() => handleAcceptInvite(invite.id)} />
+                    handleAccept={() => handleAcceptInvite(invite.id)} 
+                    handleReject={() => handleRejectInvite(invite.id)} />
                 
         </View>
         </>

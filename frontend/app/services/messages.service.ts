@@ -6,5 +6,5 @@ export const createMessage = async (eventId: number, content: string) : Promise<
         content
     });
 
-    return response.data.data;
+    return response.data;
 } 

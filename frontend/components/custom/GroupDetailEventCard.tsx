@@ -32,13 +32,13 @@ export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCar
                                         {[0, 1, 2, 3].map((idx) => (
                                             images[idx] ? (
                                                 <Image
-                                                    key={idx}
+                                                    key={`photo-${event.id}-${idx}-${images[idx].url}`}
                                                     source={{ uri: images[idx].url }}
                                                     style={styles.photoThumbnail}
                                                 />
                                             ) : (
                                                 <LinearGradient  
-                                                    key={idx}
+                                                    key={`placeholder-${event.id}-${idx}`}
                                                     colors={['#E9D4FF', '#DAB2FF']}
                                                     start={{ x: 1, y: 0 }}
                                                     end={{ x: 1, y: 1 }}

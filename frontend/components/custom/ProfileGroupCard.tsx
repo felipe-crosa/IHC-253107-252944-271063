@@ -31,7 +31,7 @@ export const ProfileGroupCard = ({ group, onPress }: ProfileGroupCardProps) => {
             
             <View style={styles.memberAvatars}>
                 {Array.from({ length: visibleAvatars }).map((_, index) => (
-                    <View key={index} style={styles.memberAvatar} />
+                    <View key={`member-avatar-${group.id}-${index}`} style={styles.memberAvatar} />
                 ))}
                 {remainingMembers > 0 && (
                     <View style={styles.remainingMembersIndicator}>

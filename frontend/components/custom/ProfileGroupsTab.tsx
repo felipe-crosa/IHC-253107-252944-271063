@@ -18,7 +18,7 @@ export const ProfileGroupsTab = ({ groups } : ProfileGroupsTabProps) => {
             {groups && groups.length > 0 && 
                 <View style={styles.groupList}>
                     {groups.map((group) => {
-                        return <ProfileGroupCard group={group}/>
+                        return <ProfileGroupCard key={group.id} group={group}/>
                     })}
                 </View>}
             <Pressable style={styles.createGroupButton}>

@@ -2,11 +2,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, View, StyleSheet } from "react-native";
 
 interface ActionButtonsProps {
-    handleAccept: () => void;
     handleReject: () => void;
+    handleAccept: () => void;
+
 }
 
-export const ActionButtons = ( { handleAccept, handleReject } : ActionButtonsProps) => {
+export const ActionButtons = ( { handleReject, handleAccept } : ActionButtonsProps) => {
     return (
         <View style={styles.actions}>
             <Pressable style={styles.rejectBtn} onPress={handleReject}>

@@ -106,11 +106,11 @@ export default function ProfileScreen() {
                             </Pressable>
                         ))}
                     </View>
-                    <ScrollView style={styles.scrollView} >
+                    <View style={styles.scrollView} >
                         {activeTab === TABS.EVENTS && <ProfilePhotosTab photos={photos || []}/>}
                         {activeTab === TABS.GROUPS && <ProfileGroupsTab groups={groups || []} />}
                         {activeTab === TABS.INFO && <ProfileInfoTab user={user} />}
-                    </ScrollView>  
+                    </View>  
                 </ScrollView>
             </View>
         </View>
@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: 'white',
         borderRadius: 10,
+        flex: 1,
     },
     tabHeadings: {
         flexDirection: 'row',
