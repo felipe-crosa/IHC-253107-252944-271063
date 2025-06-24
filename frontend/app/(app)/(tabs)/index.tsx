@@ -40,14 +40,28 @@ export default function HomeScreen() {
     getEvents();
   }, []);
 
-  const handleAcceptAction = (eventId: number) => {
-    console.log(`Accepted action for event ID: ${eventId}`);
-    // Implement the logic to handle accepting the action for the event
+  const handleAcceptAction = async (eventId: number) => {
+    try {
+      await eventsService.acceptEvent(eventId);
+      getEvents();
+    } catch (error: any) {
+      showMessage({
+        message: error.message || "An error occurred while accepting the event.",
+        type: "danger",
+      });
+    }
   };
 
-  const handleRejectAction = (eventId: number) => {
-    console.log(`Rejected action for event ID: ${eventId}`);
-    // Implement the logic to handle rejecting the action for the event
+  const handleRejectAction = async (eventId: number) => {
+    try {
+      await eventsService.rejectEvent(eventId);
+      getEvents();
+    } catch (error: any) {
+      showMessage({
+        message: error.message || "An error occurred while rejecting the event.",
+        type: "danger",
+      });
+    }
   };
 
   return (

@@ -8,12 +8,13 @@ import React from 'react';
 
 export interface PollCardProps {
     poll: Poll;
-    onVote: (pollId: number, optionIds: number[]) => void;
+    onVote: (pollId: number, optionIds: number) => void;
 }
 
 export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
     const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [hasVoted, setHasVoted] = useState(false);
 
     function handleSelect(optionId: number) {
         if (poll.multiple_choice) {
@@ -31,7 +32,15 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
         if (selectedOptions.length === 0) return;
         setIsSubmitting(true);
         try {
-            await onVote(poll.id, selectedOptions);
+            if (poll.multiple_choice) {
+                // For each selected option, call onVote separately
+                for (const optionId of selectedOptions) {
+                    await onVote(poll.id, optionId);
+                }
+            } else {
+                await onVote(poll.id, selectedOptions[0]);
+            }
+            setHasVoted(true);
         } catch (error) {
             console.error("Failed to vote:", error);
         } finally {
@@ -40,7 +49,7 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
     };
 
     const totalVotes = poll.options.reduce((sum: number, option: Option) => sum + option.votes_count, 0);
-    const userHasVoted = poll.options.some((o: Option) => o.voted);
+    const userHasVoted = poll.options.some((o: Option) => o.voted) || hasVoted;
 
     return (
         <View style={styles.card}>
@@ -82,6 +91,7 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
                                     key={option.id}
                                     style={[styles.optionButton, isSelected && styles.selectedOption]}
                                     onPress={() => handleSelect(option.id)}
+                                    disabled={isSubmitting || hasVoted}
                                 >
                                     <Ionicons
                                         name={
@@ -103,7 +113,7 @@ export const PollCard: React.FC<PollCardProps> = ({ poll, onVote }) => {
                         <Pressable
                             style={[styles.voteButton, selectedOptions.length === 0 && styles.disabledButton]}
                             onPress={handleVote}
-                            disabled={selectedOptions.length === 0 || isSubmitting}
+                            disabled={selectedOptions.length === 0 || isSubmitting || hasVoted}
                         >
                             <Text style={styles.voteButtonText}>{isSubmitting ? 'Voting...' : 'Vote'}</Text>
                         </Pressable>

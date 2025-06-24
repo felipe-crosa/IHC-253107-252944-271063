@@ -1,7 +1,7 @@
-import Ionicons from "@expo/vector-icons/Ionicons"
-import { TouchableOpacity, View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, Pressable } from "react-native"
 import { Event } from "@/app/types/event"
 import { ActionButtons } from "./ActionButtons";
+import { useRouter } from "expo-router";
 
 interface ActionRequiredEventCardProps {
     event: Event;
@@ -10,16 +10,17 @@ interface ActionRequiredEventCardProps {
 }
 
 export const ActionRequiredEventCard = ({ event, handleAcceptAction, handleRejectAction} : ActionRequiredEventCardProps) => {
+  const router = useRouter();
     return (
-        <View key={event.id} style={styles.actionEventItem}>
+        <Pressable key={event.id} style={styles.actionEventItem} onPress={() => router.push(`/events/${event.id}`)}>
             <View style={styles.eventContent}>
                 <Text style={styles.eventTitle}>{event.title}</Text>
                 <Text style={styles.eventDetails}>
                 {event.group_id} • {event.start_at}
                 </Text>
             </View>
-            <ActionButtons handleAccept={() => handleAcceptAction} handleReject={() => handleRejectAction} />
-        </View>
+            <ActionButtons handleAccept={() => handleAcceptAction(event.id)} handleReject={() => handleRejectAction(event.id)} />
+        </Pressable>
     )
 }
 

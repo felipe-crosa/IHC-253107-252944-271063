@@ -151,7 +151,7 @@ export default function EventDetailsPage() {
                 <View style={styles.aboutSection}>
                     <Text style={styles.aboutTitle}>Event Details</Text>
                     <Text style={styles.aboutText}>
-                        A group for weekend adventures and activities! We plan hikes, beach days, game nights, and more. Join us for fun weekend experiences with like-minded people.
+                        { event.description }
                     </Text>
                     <View style={styles.locationSection}>
                         <Ionicons name="location-outline" size={20} color="#364153" />

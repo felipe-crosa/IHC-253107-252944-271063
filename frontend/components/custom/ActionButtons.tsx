@@ -9,10 +9,10 @@ interface ActionButtonsProps {
 export const ActionButtons = ( { handleAccept, handleReject } : ActionButtonsProps) => {
     return (
         <View style={styles.actions}>
-            <Pressable style={styles.rejectBtn} onPress={handleAccept}>
+            <Pressable style={styles.rejectBtn} onPress={handleReject}>
                 <Ionicons name="close-outline" color={'#6A7282'} size={26} />                    
             </Pressable>
-            <Pressable style={styles.acceptBtn} onPress={handleReject}>
+            <Pressable style={styles.acceptBtn} onPress={handleAccept}>
                 <Ionicons name="checkmark-outline" color={'#8200DB'} size={26}/>                    
             </Pressable>
         </View>  

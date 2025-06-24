@@ -3,6 +3,7 @@ import { messageSchema } from "./message.schema";
 import { userSchema } from "./user.schema";
 import { categorySchema } from "./category.schema";
 import { pollSchema } from "./poll.schema";
+import { imageSchema } from "./imageSchema";
 
 export const eventSchema = z.object({
     id: z.number(),
@@ -16,6 +17,6 @@ export const eventSchema = z.object({
     confirmed_attendees: z.array(z.lazy(() => userSchema)),
     pending_attendees: z.array(z.lazy(() => userSchema)),
     cancelled_attendees: z.array(z.lazy(() => userSchema)),
-    images: z.array(z.string()),
+    images: z.array(z.lazy(() => imageSchema)),
     polls: z.array(pollSchema),
 });

@@ -27,3 +27,11 @@ export const getPendingEvents = async () : Promise<Event[]> => {
 
     return response.data.data;
 }
+
+export const acceptEvent = async (eventId: number) : Promise<void> => {
+    const response = await axios.post(`${baseUrl}/${eventId}/accept`);
+}
+
+export const rejectEvent = async (eventId: number) : Promise<void> => {
+    const response = await axios.post(`${baseUrl}/${eventId}/reject`);
+}
