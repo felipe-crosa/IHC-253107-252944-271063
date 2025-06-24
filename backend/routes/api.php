@@ -119,6 +119,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('images')->group(static function (): void {
-        // Route::get('/', ListImagesController::class);
+        Route::get('/', ListImagesController::class);
     });
 });

@@ -34,7 +34,7 @@ class InviteUserAction
             'user_id' => $user->id,
             'type' => 'group_invite',
             'title' => 'New Group Invitation',
-            'body' => "You have been invited to join the group: {$group->name}.",
+            'description' => "You have been invited to join the group: {$group->name}.",
         ]);
     }
 }
