@@ -28,6 +28,7 @@ use IHC\Backoffice\Groups\App\Controllers\ListGroupsController;
 use IHC\Backoffice\Groups\App\Controllers\ListGroupUsersController;
 use IHC\Backoffice\Groups\App\Controllers\UpdateGroupController;
 use IHC\Backoffice\Images\App\Controllers\CreateImageController;
+use IHC\Backoffice\Images\App\Controllers\ListImagesController;
 use IHC\Backoffice\Invites\App\Controllers\AcceptInviteController;
 use IHC\Backoffice\Invites\App\Controllers\ListInvitesController;
 use IHC\Backoffice\Invites\App\Controllers\RejectInviteController;

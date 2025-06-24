@@ -23,6 +23,7 @@ class MessageResource extends JsonResource
         return [
             'sender' => $this->whenLoaded('sender', fn () => new UserResource($this->sender)),
             'content' => $this->content,
+            'created_at' => $this->created_at->toIso8601String(),
         ];
     }
 }
