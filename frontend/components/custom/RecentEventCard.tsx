@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Pressable, Image } from "react-native";
 import { Event } from "@/app/types/event";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -9,6 +9,7 @@ interface RecentEventCardProps {
 
 export const RecentEventCard = ({ event } : RecentEventCardProps) => {
     const router = useRouter();
+    const images = event.images || [];
     return (
         <Pressable key={event.id} style={styles.recentEventItem} onPress={() => router.push(`/events/${event.id}`)}>
             <View style={styles.eventContent}>
@@ -18,17 +19,33 @@ export const RecentEventCard = ({ event } : RecentEventCardProps) => {
                 </Text>
             </View>
             <View style={styles.photoSection}>
-                <View style={styles.photoGrid}>
-                    {[1, 2, 3, 4].map((_, index) => (
-                        <LinearGradient  
-                            colors={['#E9D4FF', '#DAB2FF']}
-                            start={{ x: 1, y: 0 }}
-                            end={{ x: 1, y: 1 }}
-                            style={styles.photoThumbnail} />))}
-                </View>
-                <Pressable>
-                    <Text style={styles.viewPhotosText}>View all 24 photos</Text>
-                </Pressable>
+                {images.length > 0 ? (
+                    <>
+                        <View style={styles.photoGrid}>
+                            {[0, 1, 2, 3].map((idx) => (
+                                images[idx] ? (
+                                    <Image
+                                        key={idx}
+                                        source={{ uri: images[idx].url }}
+                                        style={styles.photoThumbnail}
+                                    />
+                                ) : (
+                                    <LinearGradient  
+                                        key={idx}
+                                        colors={['#E9D4FF', '#DAB2FF']}
+                                        start={{ x: 1, y: 0 }}
+                                        end={{ x: 1, y: 1 }}
+                                        style={styles.photoThumbnail} />
+                                )
+                            ))}
+                        </View>
+                        <Pressable>
+                            <Text style={styles.viewPhotosText}>View all {images.length} photos</Text>
+                        </Pressable>
+                    </>
+                ) : (
+                    <Text style={styles.noPhotosText}>No photos yet</Text>
+                )}
             </View>
         </Pressable>
     );
@@ -82,5 +99,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#8200DB',
         fontWeight: '500',
+    },
+    noPhotosText: {
+        color: '#6B7280',
+        fontSize: 14,
+        fontStyle: 'italic',
+        textAlign: 'center',
+        marginTop: 4,
     },
 })

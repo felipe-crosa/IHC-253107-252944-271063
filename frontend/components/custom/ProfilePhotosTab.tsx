@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Image, Dimensions, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Image as ImageType } from '@/app/schemas/imageSchema';
 
 interface ProfilePhotosTabProps {
-    photos: string[];
+    photos: (string | ImageType)[];
 }
 
 const { width } = Dimensions.get('window');
@@ -18,19 +19,33 @@ export const ProfilePhotosTab = ({ photos }: ProfilePhotosTabProps) => {
         );
     }
 
+    const getImageUrl = (photo: string | ImageType): string => {
+        return typeof photo === 'string' ? photo : photo.url;
+    };
+
     return (
         <View style={styles.container}>
-            {photos.map((photo, index) => (
-                <LinearGradient
-                    key={index}
-                    colors={['#E9D4FF', '#DAB2FF']}
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.photoThumbnail}
-                >
-                    <Text style={styles.photoThumbnailText}>Photo {index + 1}</Text>
-                </LinearGradient>
-            ))}
+            {photos.map((photo, index) => {
+                const imageUrl = getImageUrl(photo);
+                
+                return imageUrl ? (
+                    <Image
+                        key={index}
+                        source={{ uri: imageUrl }}
+                        style={styles.photoThumbnail}
+                    />
+                ) : (
+                    <LinearGradient
+                        key={index}
+                        colors={['#E9D4FF', '#DAB2FF']}
+                        start={{ x: 1, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.photoThumbnail}
+                    >
+                        <Text style={styles.photoThumbnailText}>Photo {index + 1}</Text>
+                    </LinearGradient>
+                );
+            })}
         </View>
     );
 };

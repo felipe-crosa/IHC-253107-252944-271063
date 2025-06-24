@@ -1,6 +1,7 @@
 import { CreateEventFormData } from "../types/event";
 import axios from "../providers/axios.provider";
 import { Event } from "../types/event";
+import { Image } from "../types/image";
 
 const baseUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/events`
 
@@ -29,9 +30,27 @@ export const getPendingEvents = async () : Promise<Event[]> => {
 }
 
 export const acceptEvent = async (eventId: number) : Promise<void> => {
-    const response = await axios.post(`${baseUrl}/${eventId}/accept`);
+    await axios.post(`${baseUrl}/${eventId}/accept`);
 }
 
 export const rejectEvent = async (eventId: number) : Promise<void> => {
-    const response = await axios.post(`${baseUrl}/${eventId}/reject`);
+    await axios.post(`${baseUrl}/${eventId}/reject`);
 }
+
+export const uploadImage = async (eventId: number, imageUri: string): Promise<Image> => {
+    const formData = new FormData();
+    
+    formData.append('file', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'photo.jpg',
+    } as any);
+
+    const response = await axios.post(`${baseUrl}/${eventId}/images`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    return response.data;
+};

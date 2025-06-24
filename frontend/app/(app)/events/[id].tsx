@@ -11,6 +11,11 @@ import { Message } from "@/app/types/message";
 import { EventPollsTab } from "@/components/custom/EventPollsTab";
 import { EventDiscussionTab } from "@/components/custom/EventDiscussionTab";
 import { EventPhotosTab } from "@/components/custom/EventPhotosTab";
+import { Image as ImageType } from "@/app/schemas/imageSchema";
+import { useAuthStore } from "@/app/stores/useAuthStore";
+import { EventAttendancePoll } from "@/components/custom/EventAttendancePoll";
+import * as groupsService from "@/app/services/groups.service";
+import { Group } from "@/app/types/group";
 
 const TABS = {
     Discussion: 'Discussion',
@@ -36,6 +41,8 @@ export default function EventDetailsPage() {
     const [event, setEvent] = useState<Event | null>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [activeTab, setActiveTab] = useState<Tabs>(TABS.Discussion);
+    const { user } = useAuthStore();
+    const [group, setGroup] = useState<Group | null>(null);
 
     const getEvent = async (id: number) => {
         try {
@@ -49,6 +56,15 @@ export default function EventDetailsPage() {
         }
     }
 
+    useEffect(() => {
+        if (!event?.group_id) return;
+        const fetchGroup = async () => {
+            const response = await groupsService.getById(event.group_id.toString());
+            setGroup(response);
+        };
+        fetchGroup();
+    }, [event?.group_id]);
+
     const handleSendMessage = async (content: string) => {
         try {
             const response = await messagesService.createMessage(event?.id || 0, content);
@@ -61,18 +77,13 @@ export default function EventDetailsPage() {
         }
     }
 
-    const handleAddPhoto = () => {
-        // TODO: Implement image picker logic
-        console.log("Add photo pressed");
-    }
-
-    const handleVote = (pollId: number, optionId: number) => {
-        // TODO: Implement voting logic
-        console.log(`Voted for option ${optionId} in poll ${pollId}`);
-    }
-
-    const handleCreatePoll = () => {
-        router.push(`/create-poll?eventId=${event?.id}`);
+    const handleImageUploaded = (newImage: ImageType) => {
+        if (event) {
+            setEvent({
+                ...event,
+                images: [...(event.images || []), newImage]
+            });
+        }
     }
 
     useEffect(() => {
@@ -97,16 +108,14 @@ export default function EventDetailsPage() {
                     <Text style={styles.title}>Event Details</Text>
                 </View>
                 <View style={styles.groupHeading}>
-                    <View style={styles.groupIcon}>
-                        <Text style={styles.groupIconText}>{ getInitials(event.title) }</Text>
-                    </View>
                     <View style={styles.groupDetails}>
                         <Text style={styles.groupName}>{ event.title }</Text>
-                        {/* <Text style={styles.groupDetailsLbl}>Created { formatShortDate(group.created_at) }</Text> */}
+                        <Text style={styles.groupDetailsLbl}>{group?.name} . { event.start_at }</Text>
                     </View>
                 </View>
             </View>
             <View style={styles.containerBody}>
+                <EventAttendancePoll event={event} user={user!} onVoted={() => getEvent(event.id)} />
                 <ScrollView style={styles.tabs}>
                     <View style={styles.tabContainer}>
                         <Pressable
@@ -138,7 +147,11 @@ export default function EventDetailsPage() {
                         <EventDiscussionTab messages={event.messages || []} onSendMessage={handleSendMessage} />
                     }
                     {activeTab === TABS.Photos && 
-                        <EventPhotosTab images={event.images || []} onAddPhoto={handleAddPhoto} />
+                        <EventPhotosTab 
+                            images={event.images || []} 
+                            eventId={event.id}
+                            onImageUploaded={handleImageUploaded}
+                        />
                     }
                     {activeTab === TABS.Polls &&
                         <EventPollsTab />

@@ -28,7 +28,8 @@ export default function ProfileScreen() {
     const [events, setEvents] = useState<Event[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const photos = events.flatMap(event => event.images || []);
+    const photos = events.flatMap(event => event.images || []).map(image => image.url);
+    const totalPhotosCount = events.reduce((total, event) => total + (event.images?.length || 0), 0);
 
     const getGroups = async () => {
         setIsLoading(true);
@@ -89,7 +90,7 @@ export default function ProfileScreen() {
                 <UserStats
                     eventsCount={events.length || 0}
                     groupsCount={groups.length || 0}
-                    photosCount={87}
+                    photosCount={totalPhotosCount}
                 />
                 <ScrollView style={styles.tabContainer}>
                     <View style={styles.tabHeadings}>
