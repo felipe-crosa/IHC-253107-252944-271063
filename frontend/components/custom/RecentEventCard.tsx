@@ -1,15 +1,24 @@
-import { View, Text, TouchableOpacity, StyleSheet, Pressable, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Pressable, Image, Dimensions } from "react-native";
 import { Event } from "@/app/types/event";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import React, { useState } from "react";
 
 interface RecentEventCardProps {
     event: Event;
 }
 
+const { width } = Dimensions.get('window');
+const cardPadding = 32; // adjust to your card's horizontal padding
+const imageSize = 60;
+const imageGap = 8;
+const imagesPerRow = Math.floor((width - cardPadding + imageGap) / (imageSize + imageGap));
+
 export const RecentEventCard = ({ event } : RecentEventCardProps) => {
     const router = useRouter();
     const images = event.images || [];
+    const [expanded, setExpanded] = useState(false);
+    const imagesToShow = expanded ? images : images.slice(0, imagesPerRow);
     return (
         <Pressable key={event.id} style={styles.recentEventItem} onPress={() => router.push(`/events/${event.id}`)}>
             <View style={styles.eventContent}>
@@ -21,27 +30,29 @@ export const RecentEventCard = ({ event } : RecentEventCardProps) => {
             <View style={styles.photoSection}>
                 {images.length > 0 ? (
                     <>
-                        <View style={styles.photoGrid}>
-                            {[0, 1, 2, 3].map((idx) => (
-                                images[idx] ? (
-                                    <Image
-                                        key={`photo-${event.id}-${idx}-${images[idx].url}`}
-                                        source={{ uri: images[idx].url }}
-                                        style={styles.photoThumbnail}
-                                    />
-                                ) : (
-                                    <LinearGradient  
-                                        key={`placeholder-${event.id}-${idx}`}
-                                        colors={['#E9D4FF', '#DAB2FF']}
-                                        start={{ x: 1, y: 0 }}
-                                        end={{ x: 1, y: 1 }}
-                                        style={styles.photoThumbnail} />
-                                )
+                        <View style={[styles.photoGrid, { flexWrap: 'wrap' }]}>
+                            {imagesToShow.map((img, idx) => (
+                                <Image
+                                    key={img.url || idx}
+                                    source={{ uri: img.url }}
+                                    style={styles.photoThumbnail}
+                                />
                             ))}
                         </View>
-                        <Pressable>
-                            <Text style={styles.viewPhotosText}>View all {images.length} photos</Text>
-                        </Pressable>
+                        {images.length > imagesPerRow && !expanded && (
+                            <Pressable onPress={() => setExpanded(true)}>
+                                <Text style={styles.viewPhotosText}>
+                                    View all {images.length} photos
+                                </Text>
+                            </Pressable>
+                        )}
+                        {expanded && images.length > imagesPerRow && (
+                            <Pressable onPress={() => setExpanded(false)}>
+                                <Text style={styles.viewPhotosText}>
+                                    Show less
+                                </Text>
+                            </Pressable>
+                        )}
                     </>
                 ) : (
                     <Text style={styles.noPhotosText}>No photos yet</Text>

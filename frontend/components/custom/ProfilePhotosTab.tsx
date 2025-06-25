@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Image, Dimensions, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, Pressable, Modal, StyleSheet, Dimensions, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Image as ImageType } from '@/app/schemas/imageSchema';
 
@@ -7,11 +7,14 @@ interface ProfilePhotosTabProps {
     photos: (string | ImageType)[];
 }
 
-const { width } = Dimensions.get('window');
-const photoSize = (width - 60) / 3;
+const { width, height } = Dimensions.get('window');
+const imageSize = (width - 48) / 3; // 3 per row, 16px padding/gap
 
 export const ProfilePhotosTab = ({ photos }: ProfilePhotosTabProps) => {
-    if (photos.length === 0) {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+
+    if (!photos || photos.length === 0) {
         return (
             <View style={styles.emptyContainer}>
                 <Text style={styles.emptyText}>No photos to display.</Text>
@@ -24,39 +27,68 @@ export const ProfilePhotosTab = ({ photos }: ProfilePhotosTabProps) => {
     };
 
     return (
-        <View style={styles.container}>
-            {photos.map((photo, index) => {
+        <View style={styles.grid}>
+            {photos.map((photo, idx) => {
                 const imageUrl = getImageUrl(photo);
-                
-                return imageUrl ? (
-                    <Image
-                        key={`photo-${index}-${imageUrl}`}
-                        source={{ uri: imageUrl }}
-                        style={styles.photoThumbnail}
-                    />
-                ) : (
-                    <LinearGradient
-                        key={`placeholder-${index}`}
-                        colors={['#E9D4FF', '#DAB2FF']}
-                        start={{ x: 1, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={styles.photoThumbnail}
+                return (
+                    <Pressable
+                        key={imageUrl || idx}
+                        onPress={() => {
+                            setSelectedImage(imageUrl);
+                            setModalVisible(true);
+                        }}
                     >
-                        <Text style={styles.photoThumbnailText}>Photo {index + 1}</Text>
-                    </LinearGradient>
+                        <Image
+                            source={{ uri: imageUrl }}
+                            style={styles.thumbnail}
+                        />
+                    </Pressable>
                 );
             })}
+            <Modal
+                visible={modalVisible}
+                transparent
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <Pressable style={styles.modalBackground} onPress={() => setModalVisible(false)}>
+                    {selectedImage && (
+                        <Image
+                            source={{ uri: selectedImage }}
+                            style={styles.fullImage}
+                            resizeMode="contain"
+                        />
+                    )}
+                </Pressable>
+            </Modal>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20,
+    grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        gap: 10,
+        gap: 8,
+        padding: 16,
+        backgroundColor: 'white',
+    },
+    thumbnail: {
+        width: imageSize,
+        height: imageSize,
+        borderRadius: 8,
+        marginBottom: 8,
+        backgroundColor: '#e5e7eb',
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.9)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    fullImage: {
+        width: width * 0.9,
+        height: height * 0.7,
+        borderRadius: 12,
     },
     emptyContainer: {
         padding: 20,
@@ -66,17 +98,5 @@ const styles = StyleSheet.create({
     emptyText: {
         color: '#6b7280',
         fontSize: 16,
-    },
-    photoThumbnail: {
-        width: photoSize,
-        height: photoSize,
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    photoThumbnailText: {
-        color: '#8200DB',
-        fontSize: 14,
-        fontWeight: '400',
     },
 });
