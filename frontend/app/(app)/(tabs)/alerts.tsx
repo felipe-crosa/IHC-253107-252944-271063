@@ -69,7 +69,7 @@ export default function AlertsTab() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fafafd' },
+  container: { flex: 1, backgroundColor: '#F9FAFB' },
   content: { padding: 20, paddingBottom: 40 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 },
   header: { fontSize: 26, fontWeight: '700', color: '#111' },

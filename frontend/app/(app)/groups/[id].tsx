@@ -76,6 +76,18 @@ export default function GroupDetailsPage() {
         getMembers(id);
     }, [id]);
 
+    const handleLeaveGroup = async () => {
+        try {
+            await groupsService.leave(id as string);
+            router.push('/groups');
+        } catch (error: any) {
+            showMessage({
+                message: error.message || "An error occurred while leaving the group.",
+                type: "danger",
+            })
+        }
+    }
+
     if (!id || !group) {
         return <Text>Loading...</Text>;
     }
@@ -134,7 +146,7 @@ export default function GroupDetailsPage() {
                     <Text style={styles.aboutText}>
                         A group for weekend adventures and activities! We plan hikes, beach days, game nights, and more. Join us for fun weekend experiences with like-minded people.
                     </Text>
-                    <Pressable style={styles.leaveButton}>
+                    <Pressable style={styles.leaveButton} onPress={handleLeaveGroup}>
                         <Ionicons name="exit-outline" size={20} color="#666" />
                         <Text style={styles.leaveButtonText}>Leave Group</Text>
                     </Pressable>

@@ -65,13 +65,7 @@ export default function GroupsScreen() {
           <Ionicons size={30} name="add-circle-outline" color={'white'}/>
         </Pressable>
       </View>
-      <View style={styles.searchInput}>
-          <Ionicons size={20} name="search-outline" color={'#99A1AF'} />
-          <TextInput
-            placeholder="Search groups..."
-            placeholderTextColor={'#99A1AF'} 
-            style={styles.searchInputText}/>
-        </View>
+     
       <ScrollView style={styles.scrollContent}>
    
         <View style={styles.groupCards}>
@@ -109,6 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     gap: 20,
+    backgroundColor: '#F9FAFB',
   },
   heading: {
     display: 'flex',

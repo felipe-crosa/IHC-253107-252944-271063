@@ -72,13 +72,6 @@ export default function SelectGroupScreen() {
             </View>
         </View>
        
-        <View style={styles.searchInput}>
-          <Ionicons size={20} name="search-outline" color={'#99A1AF'} />
-          <TextInput
-            placeholder="Search groups..."
-            placeholderTextColor={'#99A1AF'} 
-            style={styles.searchInputText}/>
-        </View>
         <View>
             <View style={styles.form}>
                 <View>

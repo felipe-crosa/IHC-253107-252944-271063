@@ -1,3 +1,4 @@
+import React from 'react';
 import { CreateEventStep1Data } from '@/app/types/event';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -168,6 +169,7 @@ const styles = StyleSheet.create({
         padding: 15,
         width: '100%',
         gap: 20,
+        backgroundColor: '#F9FAFB',
     },
     header: {
         display: 'flex',

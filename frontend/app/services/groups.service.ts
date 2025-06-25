@@ -37,3 +37,7 @@ export const getMembers = async (id: string) : Promise<User[]> => {
 
     return response.data.data;
 }
+
+export const leave = async (id: string) : Promise<void> => {
+   await axios.post(`${baseUrl}/${id}/leave`);
+}

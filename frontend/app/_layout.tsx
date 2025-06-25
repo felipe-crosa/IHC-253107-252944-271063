@@ -1,6 +1,6 @@
 import { Slot } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
 import { useAuthStore } from './stores/useAuthStore';
 import { useFonts } from 'expo-font';
@@ -30,9 +30,11 @@ export default function Layout() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Slot />
-        </SafeAreaView>
+        <View style={styles.container}>
+            <SafeAreaView style={styles.safeArea}>
+                <Slot />
+            </SafeAreaView>
+        </View>
     );
 }
 
@@ -40,6 +42,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F9FAFB',
+    },
+    safeArea: {
+        flex: 1,
+        backgroundColor: 'transparent',
     },
 });
 

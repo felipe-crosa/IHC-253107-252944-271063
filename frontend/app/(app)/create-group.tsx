@@ -1,3 +1,4 @@
+import React from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         gap: 20,
+        backgroundColor: '#F9FAFB',
     }, 
     heading: {
         display: 'flex',
