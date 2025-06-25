@@ -59,7 +59,7 @@ export const EventAttendancePoll = ({ event, user, onVoted }: EventAttendancePol
           {OPTIONS.map((opt) => (
             <Pressable
               key={opt.key}
-              style={[styles.optionBtn, { backgroundColor: opt.bg, borderColor: opt.color }]}
+              style={[styles.optionBtn, { backgroundColor: opt.bg, borderColor: opt.bg }]}
               onPress={() => handleVote(opt.key as any)}
               disabled={loading || opt.key === 'maybe'}
             >
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
   },
   optionText: {
-    fontWeight: '700',
+    fontWeight: '500',
     fontSize: 16,
   },
   resultsSection: {
