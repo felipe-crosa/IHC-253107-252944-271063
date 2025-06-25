@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View, Text, StyleSheet, Pressable, Alert } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Modal, View, Text, StyleSheet, Pressable, Alert, Animated, Easing, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -9,7 +9,29 @@ interface PhotoPickerModalProps {
     onImageSelected: (imageUri: string) => void;
 }
 
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
 export const PhotoPickerModal = ({ visible, onClose, onImageSelected }: PhotoPickerModalProps) => {
+    const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+
+    useEffect(() => {
+        if (visible) {
+            Animated.timing(translateY, {
+                toValue: 0,
+                duration: 250,
+                useNativeDriver: true,
+                easing: Easing.out(Easing.ease),
+            }).start();
+        } else {
+            Animated.timing(translateY, {
+                toValue: SCREEN_HEIGHT,
+                duration: 200,
+                useNativeDriver: true,
+                easing: Easing.in(Easing.ease),
+            }).start();
+        }
+    }, [visible]);
+
     const requestPermissions = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
@@ -74,11 +96,11 @@ export const PhotoPickerModal = ({ visible, onClose, onImageSelected }: PhotoPic
         <Modal
             visible={visible}
             transparent={true}
-            animationType="slide"
+            animationType="none"
             onRequestClose={onClose}
         >
             <View style={styles.overlay}>
-                <View style={styles.modal}>
+                <Animated.View style={[styles.modal, { transform: [{ translateY }] }]}> 
                     <View style={styles.header}>
                         <Text style={styles.title}>Add Photo</Text>
                         <Pressable onPress={onClose} style={styles.closeButton}>
@@ -101,7 +123,7 @@ export const PhotoPickerModal = ({ visible, onClose, onImageSelected }: PhotoPic
                             <Text style={styles.optionText}>Choose from Gallery</Text>
                         </Pressable>
                     </View>
-                </View>
+                </Animated.View>
             </View>
         </Modal>
     );

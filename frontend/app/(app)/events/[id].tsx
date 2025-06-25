@@ -142,6 +142,7 @@ export default function EventDetailsPage() {
                         <Text style={styles.groupName}>{event.title}</Text>
                         <View style={styles.groupMetaRow}>
                             <Text style={styles.groupMetaText}>{group?.name}</Text>
+                            <Text style={[styles.groupMetaText, styles.dot]}>•</Text>
                             <Text style={styles.groupMetaText}>{formatEventDate(event.start_at)}</Text>
                         </View>
                         <View style={styles.headerInfoRow}>
@@ -391,6 +392,7 @@ const styles = StyleSheet.create({
     },
     groupMetaRow: {
         display: 'flex',
+        gap: 5,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -400,5 +402,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
         fontWeight: '400',
+    },
+    dot: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        lineHeight: 20,
     },
 })
