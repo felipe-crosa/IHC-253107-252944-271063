@@ -39,7 +39,6 @@ export const EventAttendancePoll = ({ event, user, onVoted }: EventAttendancePol
     try {
       if (option === 'yes') await eventsService.acceptEvent(event.id);
       else if (option === 'no') await eventsService.rejectEvent(event.id);
-      // else if (option === 'maybe') await eventsService.setMaybeEvent(event.id); // Remove for now
       onVoted();
     } catch (e) {
       // handle error

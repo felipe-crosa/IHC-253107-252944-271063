@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Message } from '@/app/types/message';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { User } from '@/app/types/user';
@@ -21,7 +21,7 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
         }
     };
 
-    const renderMessage = ({ item }: { item: Message }) => {
+    const renderMessage = (item: Message, index: number) => {
         if (!item || !item.sender) {
             console.warn('Invalid message or sender:', item);
             return null;
@@ -37,7 +37,7 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
         const senderInitial = senderName.charAt(0) || '?';
 
         return (
-            <View style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.otherMessageRow]}>
+            <View key={item.id?.toString() || index.toString()} style={[styles.messageRow, isMyMessage ? styles.myMessageRow : styles.otherMessageRow]}>
                 {!isMyMessage && (
                     <View style={styles.avatar}>
                         <Text style={styles.avatarText}>{senderInitial}</Text>
@@ -59,14 +59,9 @@ export const EventDiscussionTab = ({ messages, onSendMessage }: EventDiscussionT
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={messages}
-                renderItem={renderMessage}
-                keyExtractor={(item, index) => item.id?.toString() || index.toString()}
-                inverted
-                style={styles.messagesList}
-                contentContainerStyle={{ flexDirection: 'column-reverse' }}
-            />
+            <View style={styles.messagesList}>
+                {messages.map((message, index) => renderMessage(message, index))}
+            </View>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}

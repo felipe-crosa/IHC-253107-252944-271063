@@ -16,6 +16,7 @@ import { useAuthStore } from "@/app/stores/useAuthStore";
 import { EventAttendancePoll } from "@/components/custom/EventAttendancePoll";
 import * as groupsService from "@/app/services/groups.service";
 import { Group } from "@/app/types/group";
+import { format, isToday, isTomorrow } from 'date-fns';
 
 const TABS = {
     Discussion: 'Discussion',
@@ -33,6 +34,17 @@ const mockEvent = {
     location: 'Santa Monica Beach',
     group_id: 2,
     category_id: 1,
+}
+
+function formatEventDate(dateString: string) {
+    const date = new Date(dateString);
+    if (isToday(date)) {
+        return `Today, ${format(date, 'h:mm a')}`;
+    } else if (isTomorrow(date)) {
+        return `Tomorrow, ${format(date, 'h:mm a')}`;
+    } else {
+        return format(date, 'MMM d, h:mm a');
+    }
 }
 
 export default function EventDetailsPage() {
@@ -127,8 +139,17 @@ export default function EventDetailsPage() {
                 </View>
                 <View style={styles.groupHeading}>
                     <View style={styles.groupDetails}>
-                        <Text style={styles.groupName}>{ event.title }</Text>
-                        <Text style={styles.groupDetailsLbl}>{group?.name} . { event.start_at }</Text>
+                        <Text style={styles.groupName}>{event.title}</Text>
+                        <View style={styles.groupMetaRow}>
+                            <Text style={styles.groupMetaText}>{group?.name}</Text>
+                            <Text style={styles.groupMetaText}>{formatEventDate(event.start_at)}</Text>
+                        </View>
+                        <View style={styles.headerInfoRow}>
+                            <View style={styles.categoryPill}>
+                                <Text style={styles.categoryText}>{event.category?.name || 'Category'}</Text>
+                            </View>
+                            <Text style={styles.goingText}>{event.confirmed_attendees?.length || 0} going</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -214,6 +235,7 @@ const styles = StyleSheet.create({
         padding: 15,
         gap: 20,
         justifyContent: 'center',
+        paddingHorizontal: 16,
     },
     heading: {
         display: 'flex',
@@ -258,9 +280,12 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     groupDetails: {
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        gap: 5,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        gap: 10,
     },
     groupDetailsLbl: {
         fontSize: 14,
@@ -270,8 +295,7 @@ const styles = StyleSheet.create({
     tabsWrapper: {
         width: '100%',
         backgroundColor: 'white',
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
+        borderRadius: 8,
     },
     tabContainer: {
         flexDirection: 'row',
@@ -325,7 +349,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',  
         gap: 8,
-        marginBottom: 20,
+        marginBottom: 15,
     },
     aboutTitle: {
         fontSize: 18,
@@ -342,5 +366,39 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4,
+    },
+    headerInfoRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    categoryPill: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderRadius: 12,
+        paddingHorizontal: 14,
+        paddingVertical: 4,
+    },
+    categoryText: {
+        color: 'white',
+        fontWeight: '500',
+        fontSize: 14,
+    },
+    goingText: {
+        color: 'white',
+        fontWeight: '400',
+        fontSize: 14,
+    },
+    groupMetaRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        width: '100%',
+    },
+    groupMetaText: {
+        color: 'white',
+        fontSize: 15,
+        fontWeight: '400',
     },
 })
