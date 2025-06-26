@@ -11,38 +11,6 @@ Requirements: Php >= 8.4.0 & Composer
 
 This step is not necessary when you use Docker.
 
-### Techs
-
-- Docker
-  - Laravel Sail
-- Laravel 12.X & Php 8.4
-  - Tools
-    - Ide Helper
-    - Phpstan
-    - Php ECS
-    - Rector Php
-    - XDebug
-    - Sentry
-    - Telescope in Local Envoriment
-  - Single Action and Clean Controllers
-  - Request Classes
-  - Strict Mode
-- Postgresql 16
-- Redis
-- Meilisearch
-- Minio
-- Mailpit
-- Scramble – Laravel OpenAPI (Swagger) Documentation Generator
-- Pest Php for Backend Testing
-  - Coverage HTML Report
-- Browser Testing with Dusk (using selenium)
-- Git
-  - PR Template
-  - Issue Template
-  - Git Hooks with CaptainHook
-
-### Backend Installation
-
 1. Clone GitHub repo for this project locally:
 
    ```bash
