@@ -46,7 +46,7 @@ export default function HomeScreen() {
       getEvents();
     } catch (error: any) {
       showMessage({
-        message: error.message || "An error occurred while accepting the event.",
+        message: error.response?.data?.message || "An error occurred while accepting the event.",
         type: "danger",
       });
     }

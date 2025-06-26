@@ -30,7 +30,7 @@ export default function LoginScreen() {
             router.push('/');
         } catch (err: any) {
           showMessage({
-            message: err.message || "An error occurred during login.",
+            message: err.response?.data?.message || "An error occurred during login.",
             type: "danger",
           });  
         }

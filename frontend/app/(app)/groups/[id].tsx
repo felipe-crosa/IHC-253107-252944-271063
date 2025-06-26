@@ -19,10 +19,6 @@ const TABS = {
 
 type Tabs = (typeof TABS)[keyof typeof TABS];
 
-type GroupDetailsPageParams = {
-    id: string;
-};
-
 export default function GroupDetailsPage() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
@@ -37,7 +33,7 @@ export default function GroupDetailsPage() {
             setGroup(response);
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while fetching group details.",
+                message: error.response?.data?.message || "An error occurred while fetching group details.",
                 type: "danger",
             })
         }
@@ -49,7 +45,7 @@ export default function GroupDetailsPage() {
             setEvents(response);
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while fetching group events.",
+                message: error.response?.data?.message || "An error occurred while fetching group events.",
                 type: "danger",
             })
         }
@@ -61,7 +57,7 @@ export default function GroupDetailsPage() {
             setMembers(response);
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while fetching group members.",
+                message: error.response?.data?.message || "An error occurred while fetching group members.",
                 type: "danger",
             })
         }
@@ -82,7 +78,7 @@ export default function GroupDetailsPage() {
             router.push('/groups');
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while leaving the group.",
+                message: error.response?.data?.message || "An error occurred while leaving the group.",
                 type: "danger",
             })
         }
@@ -109,7 +105,7 @@ export default function GroupDetailsPage() {
                     </View>
                     <View style={styles.groupDetails}>
                         <Text style={styles.groupName}>{ group.name }</Text>
-                        <Text style={styles.groupDetailsLbl}>Created { formatShortDate(group.created_at) }</Text>
+                        <Text style={styles.groupDetailsLbl}>Created { formatShortDate(group.created_at || '') }</Text>
                     </View>
                 </View>
             </View>
@@ -135,7 +131,7 @@ export default function GroupDetailsPage() {
                     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                     {activeTab === TABS.Events ? 
                         <GroupDetailEventsTab pastEvents={getPastEvents(events)} upcomingEvents={getUpcomingEvents(events)} /> : 
-                        <GroupDetailMembersTab members={members} groupId={group.id} />}
+                        <GroupDetailMembersTab members={members} groupId={group.id} ownerId={group.owner_id} />}
                 </ScrollView>
 
                 </ScrollView>
@@ -256,12 +252,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
     },
-    eventsTab: {
-
-    }, 
-    membersTab: {
-
-    },
     tab: {
         flex: 1,
         paddingVertical: 16,
@@ -269,8 +259,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         borderBottomColor: 'transparent',
         backgroundColor: 'white',
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
     },
     activeTab: {
         borderBottomColor: '#8200DB',

@@ -25,7 +25,7 @@ export const InviteCard = ({ invite, onInviteAccepted, onInviteRejected } : Invi
 
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while accepting the invite.",
+                message: error.response?.data?.message || "An error occurred while accepting the invite.",
                 type: "danger",
             });
         }
@@ -42,7 +42,7 @@ export const InviteCard = ({ invite, onInviteAccepted, onInviteRejected } : Invi
 
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while rejecting the invite.",
+                message: error.response?.data?.message || "An error occurred while rejecting the invite.",
                 type: "danger",
             });
         }

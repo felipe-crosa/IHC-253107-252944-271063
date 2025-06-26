@@ -3,12 +3,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { ProfileGroupCard } from './ProfileGroupCard';
+import { useRouter } from 'expo-router';
 
 interface ProfileGroupsTabProps {
     groups: Group[]; 
 }
 
 export const ProfileGroupsTab = ({ groups } : ProfileGroupsTabProps) => {
+    const router = useRouter();
+    
     return (
         <View style={styles.tabContent}>
             {!groups || groups.length === 0 && (
@@ -21,7 +24,7 @@ export const ProfileGroupsTab = ({ groups } : ProfileGroupsTabProps) => {
                         return <ProfileGroupCard key={group.id} group={group}/>
                     })}
                 </View>}
-            <Pressable style={styles.createGroupButton}>
+            <Pressable style={styles.createGroupButton} onPress={() => router.push('/create-group')}>
                 <Ionicons name="add" size={20} color="#8200DB" />
                 <Text style={styles.createGroupText}>Create New Group</Text>
             </Pressable>

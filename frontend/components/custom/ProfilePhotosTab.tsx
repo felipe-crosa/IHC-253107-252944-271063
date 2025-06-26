@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Image, Pressable, Modal, StyleSheet, Dimensions, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Image as ImageType } from '@/app/schemas/imageSchema';
 
 interface ProfilePhotosTabProps {

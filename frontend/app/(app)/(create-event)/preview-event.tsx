@@ -2,12 +2,43 @@ import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEventStore } from '@/app/stores/useEventStore';
+import { useEffect, useState } from 'react';
+import * as categoriesService from '@/app/services/categories.service';
+import * as groupsService from '@/app/services/groups.service';
 
 export default function SelectGroupScreen() {
     const router = useRouter();
     const { prevStep, setCurrentStep, eventData, submitEvent } = useEventStore();
 
     const { title, description, start_at, location, group_id, category_id } = eventData;
+    const [categoryName, setCategoryName] = useState('');
+    const [groupName, setGroupName] = useState('');
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const categories = await categoriesService.getAll();
+                const found = categories.find(cat => cat.id === category_id);
+                setCategoryName(found ? found.name : String(category_id));
+            } catch {
+                setCategoryName(String(category_id));
+            }
+        };
+        fetchCategory();
+    }, [category_id]);
+
+    useEffect(() => {
+        const fetchGroup = async () => {
+            try {
+                const group = await groupsService.getById(String(group_id));
+                setGroupName(group.name);
+            } catch {
+                setGroupName(String(group_id));
+            }
+        };
+        fetchGroup();
+    }, [group_id]);
+
     console.log(start_at)
 
     const handleGoBack = () => {
@@ -66,7 +97,7 @@ export default function SelectGroupScreen() {
                   <Text style={styles.eventDate}> { formatDate(start_at) } </Text>
                 </View>
                 <View style={styles.eventCategoryWrapper}>
-                  <Text style={styles.eventCategory}>{category_id}</Text>
+                  <Text style={styles.eventCategory}>{categoryName}</Text>
                 </View>
               </View>
               <View style={styles.groupInfo}>
@@ -77,7 +108,9 @@ export default function SelectGroupScreen() {
                 </View>
                 <View style={styles.group}>
                   <Ionicons name="people-outline" size={24} color="#364153" />
-                  <Text style={styles.groupName}>{ group_id }</Text>
+                  <Text style={styles.groupName}>
+                    {groupName}
+                  </Text>
                 </View>
               </View>
             </View>

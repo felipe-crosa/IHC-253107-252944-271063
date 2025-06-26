@@ -1,6 +1,4 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 interface ProfileInfoCardProps {
     title?: string;

@@ -26,16 +26,6 @@ const TABS = {
 
 type Tabs = (typeof TABS)[keyof typeof TABS];
 
-const mockEvent = {
-    id: 1,
-    title: 'Beach Day',
-    description: 'Fun day at the beach with games and BBQ',
-    start_at: new Date(Date.now() + 24 * 60 * 60 * 1000), 
-    location: 'Santa Monica Beach',
-    group_id: 2,
-    category_id: 1,
-}
-
 function formatEventDate(dateString: string) {
     const date = new Date(dateString);
     if (isToday(date)) {
@@ -62,7 +52,7 @@ export default function EventDetailsPage() {
             setEvent(response);
         } catch (error: any) {
             showMessage({
-                message: error.message || "An error occurred while fetching event details.",
+                message: error.response?.data?.message || "An error occurred while fetching event details.",
                 type: "danger",
             })
         }
@@ -101,7 +91,7 @@ export default function EventDetailsPage() {
         } catch (error: any) {
             console.error('Error sending message:', error);
             showMessage({
-                message: error.message || "An error occurred while sending the message.",
+                message: error.response?.data?.message || "An error occurred while sending the message.",
                 type: "danger",
             })
         }

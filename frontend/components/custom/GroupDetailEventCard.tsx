@@ -1,10 +1,9 @@
 import React from "react";
 import { Event } from "@/app/types/event";
-import { formatShortDate } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons"
-import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
+import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable } from "react-native"
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 interface GroupDetailEventCard {
     event: Event;
@@ -12,10 +11,11 @@ interface GroupDetailEventCard {
 }
 
 export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => { 
+    const router = useRouter();
     const [showAllPhotos, setShowAllPhotos] = useState(false);
     const images = event.images || [];
     const displayedImages = showAllPhotos ? images : images.slice(0, 4);
-    return (<View key={event.id} style={styles.eventItem}>
+    return (<Pressable key={event.id} style={styles.eventItem} onPress={() => router.push(`/events/${event.id}`)}>
                 <View style={styles.eventContent}>
                     <View style={styles.eventInfo}>
                         <View style={[styles.eventIcon, isUpcoming ? styles.upcomingEventIcon : styles.pastEventIcon]}>
@@ -54,12 +54,10 @@ export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCar
                             )}
                         </View>
                     )}
-                    {/* {isUpcoming && (
-                        <Text style={styles.attendeesText}>{event.attendees} going</Text>
-                    )} */}
+                  
                 </View>
 
-        </View>)
+        </Pressable>)
 }
 
 const styles = StyleSheet.create({

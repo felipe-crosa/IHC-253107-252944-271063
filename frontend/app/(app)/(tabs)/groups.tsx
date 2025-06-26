@@ -24,7 +24,7 @@ export default function GroupsScreen() {
       setGroups(groups);
     } catch (error: any) {
       showMessage({
-        message: error.message || "An error occurred while fetching groups.",
+        message: error.response?.data?.message || "An error occurred while fetching groups.",
         type: "danger",
       });
     }
@@ -36,7 +36,7 @@ export default function GroupsScreen() {
       setInvites(invites);
     } catch (error: any) {
       showMessage({
-        message: error.message || "An error occurred while fetching groups.",
+        message: error.response?.data?.message || "An error occurred while fetching groups.",
         type: "danger",
       });
     }
@@ -56,7 +56,6 @@ export default function GroupsScreen() {
     getInvites();
   }, []);
 
-  // Show success message if passed via navigation params
   useEffect(() => {
     if (successMessage) {
       showMessage({

@@ -26,7 +26,7 @@ export const GroupDetailEventsTab = ({ upcomingEvents, pastEvents } : GroupDetai
                     <Text style={styles.noDataLabel}>No upcoming events</Text>
                 )}
                 {upcomingEvents.length > 0 && upcomingEvents.map(event => { 
-                    return <GroupDetailEventCard event={event} isUpcoming={true} />
+                    return <GroupDetailEventCard key={event.id} event={event} isUpcoming={true} />
                 })}
             </View>
            
@@ -36,7 +36,7 @@ export const GroupDetailEventsTab = ({ upcomingEvents, pastEvents } : GroupDetai
                     <Text style={styles.noDataLabel}>No past events</Text>
                 )}
                 {pastEvents.map(event => { 
-                    return <GroupDetailEventCard event={event} isUpcoming={false} />
+                    return <GroupDetailEventCard key={event.id} event={event} isUpcoming={false} />
                 })}
             </View>
         </View>
@@ -52,8 +52,6 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         backgroundColor: 'white',
         width: '100%',
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
         display: 'flex',
         flexDirection: 'column',
         gap: 12

@@ -44,7 +44,7 @@ export default function CreateGroupScreen() {
         <FlashMessage position="top" />
          <View style={styles.container}>
             <View style={styles.heading}>
-                <Pressable onPress={() => router.push('/groups')} style={styles.backButton}>
+                <Pressable onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons size={20} name="chevron-back-outline" color={'black'} />
                 </Pressable>
                 <Text style={styles.title}>Create Group</Text>

@@ -1,6 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Pressable, Image, Dimensions } from "react-native";
 import { Event } from "@/app/types/event";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 
@@ -9,7 +8,7 @@ interface RecentEventCardProps {
 }
 
 const { width } = Dimensions.get('window');
-const cardPadding = 32; // adjust to your card's horizontal padding
+const cardPadding = 32; 
 const imageSize = 60;
 const imageGap = 8;
 const imagesPerRow = Math.floor((width - cardPadding + imageGap) / (imageSize + imageGap));

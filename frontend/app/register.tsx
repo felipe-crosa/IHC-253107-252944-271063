@@ -40,7 +40,7 @@ export default function RegisterScreen() {
                 }, 100);
             } catch (err: any) {
                 showMessage({
-                  message: err.message || "An error occurred during register.",
+                  message: err.response?.data?.message || "An error occurred during register.",
                   type: "danger",
                 });  
             }

@@ -36,12 +36,10 @@ export const DateTime = ({
   const onChangeTime = (event: DateTimePickerEvent, selectedTime?: Date) => {
     if (selectedTime) {
       if (value) {
-        // If we have an existing value, preserve the date and update time
         const updated = new Date(value);
         updated.setHours(selectedTime.getHours(), selectedTime.getMinutes(), selectedTime.getSeconds(), selectedTime.getMilliseconds());
         onChange(updated);
       } else {
-        // If no existing value, use today's date with selected time
         const updated = new Date();
         updated.setHours(selectedTime.getHours(), selectedTime.getMinutes(), selectedTime.getSeconds(), selectedTime.getMilliseconds());
         onChange(updated);

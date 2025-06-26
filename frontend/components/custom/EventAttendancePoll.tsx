@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Event } from '@/app/types/event';
 import { User } from '@/app/types/user';
 import * as eventsService from '@/app/services/events.service';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 interface EventAttendancePollProps {
   event: Event;
@@ -40,14 +41,19 @@ export const EventAttendancePoll = ({ event, user, onVoted }: EventAttendancePol
       if (option === 'yes') await eventsService.acceptEvent(event.id);
       else if (option === 'no') await eventsService.rejectEvent(event.id);
       onVoted();
-    } catch (e) {
-      // handle error
+    } catch (e: any) {
+        showMessage({
+            message: e.response?.data?.message || "An error occurred while voting.",
+            type: "danger",
+        });
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <>
+    <FlashMessage position="top" />
     <View style={styles.container}>
       <View style={styles.headerRow}>
         {!isPending ? null : <Text style={styles.question}>¿Asistirás?</Text>}
@@ -73,6 +79,7 @@ export const EventAttendancePoll = ({ event, user, onVoted }: EventAttendancePol
         <PollBar label={`No asistirán (${counts.no})`} color="#ef4444" value={percentages.no} />
       </View>
     </View>
+    </>
   );
 };
 

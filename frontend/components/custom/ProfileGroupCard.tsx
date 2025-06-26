@@ -9,9 +9,8 @@ interface ProfileGroupCardProps {
 }
 
 export const ProfileGroupCard = ({ group, onPress }: ProfileGroupCardProps) => {
-    // Mock member count - you can replace this with actual data from your Group interface
-    const memberCount = 8;
-    const visibleAvatars = 3; // Number of avatar placeholders to show
+    const memberCount = group.members?.length || 0;
+    const visibleAvatars = 3;
     const remainingMembers = memberCount - visibleAvatars;
 
     const CardContent = (
@@ -41,14 +40,6 @@ export const ProfileGroupCard = ({ group, onPress }: ProfileGroupCardProps) => {
             </View>
         </View>
     );
-
-    // if (onPress) {
-    //     return (
-    //         <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
-    //             {CardContent}
-    //         </TouchableOpacity>
-    //     );
-    // }
 
     return CardContent;
 };

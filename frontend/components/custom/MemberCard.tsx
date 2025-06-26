@@ -1,7 +1,6 @@
 import { User } from "@/app/types/user";
 import { getInitials } from "@/helpers/format-text.helper";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 interface MemberCardProps {
     user: User;

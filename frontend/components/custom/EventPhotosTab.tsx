@@ -42,7 +42,7 @@ export const EventPhotosTab = ({ images, eventId, onImageUploaded }: EventPhotos
             });
         } catch (error: any) {
             showMessage({
-                message: error.response.data.message || 'Failed to upload photo. Please try again.',
+                message: error.response?.data?.message || 'Failed to upload photo. Please try again.',
                 type: 'danger',
             });
         } finally {

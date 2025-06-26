@@ -10,15 +10,11 @@ import * as invitesService from "@/app/services/invites.service";
 interface GroupDetailMembersTabProps {
     members?: User[];
     groupId: number;
+    ownerId: number;
 }
 
-export const GroupDetailMembersTab = ({ members = [], groupId }: GroupDetailMembersTabProps) => {
+export const GroupDetailMembersTab = ({ members = [], groupId, ownerId }: GroupDetailMembersTabProps) => {
     const [isModalVisible, setModalVisible] = useState(false);
-
-    const isOwner = (user: User) => {
-        // For now, show the first user as owner
-        return members.indexOf(user) === 0;
-    };
 
     const handleInvite = async (email: string) => {
         try {
@@ -27,9 +23,9 @@ export const GroupDetailMembersTab = ({ members = [], groupId }: GroupDetailMemb
                 message: "Invitation sent successfully!",
                 type: "success",
             });
-        } catch (error) {
+        } catch (error: any) {
             showMessage({
-                message: "Failed to send invitation.",
+                message: error.response?.data?.message || "Failed to send invitation.",
                 type: "danger",
             });
         } finally {
@@ -61,7 +57,7 @@ export const GroupDetailMembersTab = ({ members = [], groupId }: GroupDetailMemb
                         <MemberCard 
                             key={`${member.email}-${index}`} 
                             user={member} 
-                            isOwner={isOwner(member)} 
+                            isOwner={member.id === ownerId} 
                         />
                     ))}
                 </View>
@@ -81,8 +77,6 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: 'white',
         width: '100%',
-        borderBottomLeftRadius: 8,
-        borderBottomRightRadius: 8,
     },
     sectionHeader: {
         flexDirection: 'row',
