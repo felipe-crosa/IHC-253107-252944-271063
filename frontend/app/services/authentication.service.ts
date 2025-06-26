@@ -1,10 +1,10 @@
-import { User } from '../interfaces/user.interface';
+import { User } from '../types/user';
 import axios from '../providers/axios.provider';
 import { RegisterFormData } from '../types/register';
 
 const baseUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/auth`;
 
-export const login = async (email: string, password: string) : Promise<{token_type: string, access_token: string}> => {
+export const login = async (email: string, password: string) : Promise<{token_type: string, access_token: string, expires_in: number}> => {
     const response = await axios.post(`${baseUrl}/login`, {
         email,
         password

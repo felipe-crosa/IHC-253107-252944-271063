@@ -1,15 +1,18 @@
 import { AxiosInstance } from 'axios';
 
-export function setupAxiosInterceptors(axiosInstance: AxiosInstance) {
+export function setupAxiosInterceptors(
+  axiosInstance: AxiosInstance,
+) {
+
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      const message =
-        error?.response?.data?.message ||
-        error?.message ||
-        'An unknown error occurred';
-
-      return Promise.reject(new Error(message));
+      if (error.response?.status === 401) {
+        import('../stores/useAuthStore').then(({ useAuthStore }) => {
+          useAuthStore.getState().signOut();
+        });
+      }
+      return Promise.reject(error);
     }
   );
 }

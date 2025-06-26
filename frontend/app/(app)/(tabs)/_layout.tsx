@@ -1,14 +1,8 @@
-import { useAuth } from '@/app/context/useAuth';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Redirect, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
-    const { isLoggedIn } = useAuth();
   
-    if (!isLoggedIn) {
-      return <Redirect href="/login" />;
-    }
-    
   return (
     <Tabs screenOptions={{
       tabBarActiveTintColor: '#8200DB',
@@ -42,7 +36,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="create"
+        name="create-event"
         options={{
           title: 'Create',
           tabBarIcon: ({ color }) => <Ionicons size={23} name="add-circle-outline" color={color} />

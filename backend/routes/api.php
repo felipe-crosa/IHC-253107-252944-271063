@@ -82,8 +82,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('invites')->group(static function (): void {
-        Route::post('/{invitation}/accept', AcceptInviteController::class);
-        Route::delete('/{invitation}/reject', RejectInviteController::class);
+        Route::post('/{invite}/accept', AcceptInviteController::class);
+        Route::delete('/{invite}/reject', RejectInviteController::class);
         Route::get('/', ListInvitesController::class);
     });
 

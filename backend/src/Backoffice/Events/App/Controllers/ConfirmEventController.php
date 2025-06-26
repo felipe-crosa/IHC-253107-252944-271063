@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace IHC\Backoffice\Events\App\Controllers;
 
 use IHC\Backoffice\Events\Domain\Actions\DecideEventParticipationAction;
-use IHC\Backoffice\Events\Domain\Actions\DeleteEventAction;
 use IHC\Backoffice\Events\Domain\Models\Event;
 use Illuminate\Http\Request;
 
