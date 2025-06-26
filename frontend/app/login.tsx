@@ -1,13 +1,11 @@
-import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native';
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Image } from 'expo-image';
 import { Link, useRouter } from 'expo-router';
 import { LoginFormData } from './types/login';
-import { useState } from 'react';
 import { loginSchema } from './schemas/login.schema';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage, { showMessage } from "react-native-flash-message";
 import { useAuthStore } from './stores/useAuthStore';
 
 export default function LoginScreen() {
@@ -80,7 +78,6 @@ export default function LoginScreen() {
                     )}
                 />     
                 {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}           
-                <Text style={styles.forgotPasswordLabel}>Forgot your password?</Text>
             </View>
         </View>
         <Pressable
@@ -89,18 +86,6 @@ export default function LoginScreen() {
             <Text style={styles.loginLabel}>Login</Text>
           </Pressable>
           <View style={styles.optionsSection}>
-            <View style={styles.divider}>
-                <View style={styles.line}></View>
-                <Text style={styles.dividerText}>or continue with</Text>
-                <View style={styles.line}></View>
-            </View>
-            <View style={styles.options}>
-                <Pressable style={styles.option} onPress={() => console.log('Google pressed')}>
-                    <Image
-                        source={require('@/assets/images/google-icon.svg')}
-                        style={{ width: 30, height: 30 }} />
-                </Pressable>
-            </View>
             <View style={styles.noAccount}>
                 <Text style={styles.noAccountText}>Don't have an account?</Text>
                 <Link href="/register" style={styles.signUpText}>Sign Up</Link>
@@ -204,20 +189,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     position: 'relative',
     top: -1,
-  }, 
-  options: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-evenly',
-  },
-  option: {
-    borderWidth: 1,
-    borderColor: '#99A1AF',
-    borderRadius: 15,
-    paddingHorizontal: 50,
-    paddingVertical: 10,
   }, 
   noAccount: {
     display: 'flex',

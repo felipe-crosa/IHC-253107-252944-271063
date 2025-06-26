@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { CreateEventFormData } from '../types/event';
 import * as eventsService from '../services/events.service';
+import { useNotificationStore } from './useNotificationStore';
 
 interface EventStore {
   eventData: CreateEventFormData;
@@ -51,6 +52,10 @@ export const useEventStore = create<EventStore>()((set, get) => ({
   submitEvent: async () => {
     const { eventData, resetEventForm } = get();
     await eventsService.create(eventData);
-    resetEventForm(); 
+    resetEventForm();
+    useNotificationStore.getState().setPendingMessage({
+      message: "Event created successfully!",
+      type: "success"
+    });
   },
 }));

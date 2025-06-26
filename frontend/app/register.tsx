@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, ScrollView } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -6,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from './schemas/register.schema';
 import * as authenticationService from './services/authentication.service';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNotificationStore } from './stores/useNotificationStore';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 
 export default function RegisterScreen() {
@@ -29,7 +31,13 @@ export default function RegisterScreen() {
     const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
             try {
                 await authenticationService.register(data);
-                router.navigate('/login');
+                useNotificationStore.getState().setPendingMessage({
+                    message: "Registration successful!",
+                    type: "success"
+                });
+                setTimeout(() => {
+                    router.navigate('/login');
+                }, 100);
             } catch (err: any) {
                 showMessage({
                   message: err.message || "An error occurred during register.",
@@ -39,8 +47,6 @@ export default function RegisterScreen() {
         }
 
   return (
-    <>
-    <FlashMessage position="top" />
     <SafeAreaView style={styles.container}>
       <ScrollView 
             contentContainerStyle={styles.scrollContent}     
@@ -137,7 +143,6 @@ export default function RegisterScreen() {
       </View>
       </ScrollView>
     </SafeAreaView>
-    </>
   );
 }
 

@@ -8,7 +8,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Group } from '../../types/group';
 import { useEffect, useState } from 'react';
 import * as groupsService from '../../services/groups.service';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
 import { useEventStore } from '@/app/stores/useEventStore';
 import { GroupSelect } from '@/components/custom/GroupSelect';
 
@@ -22,10 +21,7 @@ export default function SelectGroupScreen() {
             const groups = await groupsService.getAll();
             setGroups(groups);
         } catch (error: any) {
-            showMessage({
-                message: error.message || "An error occurred while fetching groups.",
-                type: "danger",
-            });
+            console.error("An error occurred while fetching groups.", error);
         }
     }
 
@@ -55,8 +51,6 @@ export default function SelectGroupScreen() {
     }
         
   return (
-    <>
-    <FlashMessage position="top" />
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.heading}>
@@ -102,7 +96,6 @@ export default function SelectGroupScreen() {
         </View>
     
     </View>
-    </>
   );
 }
 

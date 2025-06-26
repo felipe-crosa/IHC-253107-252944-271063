@@ -27,7 +27,10 @@ export default function CreateGroupScreen() {
      const onSubmit: SubmitHandler<CreateGroupFormData> = async (data) => {
             try {
                 await groupsService.create(data);
-                router.push('/groups');
+                router.push({
+                    pathname: '/groups',
+                    params: { successMessage: 'Group created successfully!' }
+                });
             } catch (err: any) {
               showMessage({
                 message: err.message || "An error occurred whilst creating the group.",

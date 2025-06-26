@@ -1,8 +1,10 @@
+import React from "react";
 import { Event } from "@/app/types/event";
 import { formatShortDate } from "@/helpers/format-text.helper";
 import Ionicons from "@expo/vector-icons/Ionicons"
 import { LinearGradient } from "expo-linear-gradient";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native"
+import { useState } from "react";
 
 interface GroupDetailEventCard {
     event: Event;
@@ -10,9 +12,9 @@ interface GroupDetailEventCard {
 }
 
 export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCard ) => { 
-    console.log(event.start_at);
-    console.log(typeof event.start_at);   
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
     const images = event.images || [];
+    const displayedImages = showAllPhotos ? images : images.slice(0, 4);
     return (<View key={event.id} style={styles.eventItem}>
                 <View style={styles.eventContent}>
                     <View style={styles.eventInfo}>
@@ -29,28 +31,23 @@ export const GroupDetailEventCard = ({ event, isUpcoming } : GroupDetailEventCar
                             {images.length > 0 ? (
                                 <>
                                     <View style={styles.photoGrid}>
-                                        {[0, 1, 2, 3].map((idx) => (
-                                            images[idx] ? (
-                                                <Image
-                                                    key={`photo-${event.id}-${idx}-${images[idx].url}`}
-                                                    source={{ uri: images[idx].url }}
-                                                    style={styles.photoThumbnail}
-                                                />
-                                            ) : (
-                                                <LinearGradient  
-                                                    key={`placeholder-${event.id}-${idx}`}
-                                                    colors={['#E9D4FF', '#DAB2FF']}
-                                                    start={{ x: 1, y: 0 }}
-                                                    end={{ x: 1, y: 1 }}
-                                                    style={styles.photoThumbnail} />
-                                            )
+                                        {displayedImages.map((img, idx) => (
+                                            <Image
+                                                key={`photo-${event.id}-${idx}-${img.url}`}
+                                                source={{ uri: img.url }}
+                                                style={styles.photoThumbnail}
+                                            />
                                         ))}
                                     </View>
-                                    <TouchableOpacity>
-                                        <Text style={styles.viewPhotosText}>
-                                            View all {images.length} photos
-                                        </Text>
-                                    </TouchableOpacity>
+                                    {images.length > 4 && (
+                                        <TouchableOpacity onPress={() => setShowAllPhotos(v => !v)}>
+                                            <Text style={styles.viewPhotosText}>
+                                                {showAllPhotos
+                                                    ? "Hide photos"
+                                                    : `View all ${images.length} photos`}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    )}
                                 </>
                             ) : (
                                 <Text style={styles.noPhotosText}>No photos yet</Text>
@@ -126,6 +123,8 @@ const styles = StyleSheet.create({
     },
     photoGrid: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
         marginBottom: 8,
     },
     photoThumbnail: {

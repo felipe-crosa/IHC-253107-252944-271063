@@ -10,7 +10,6 @@ import { useEventStore } from '@/app/stores/useEventStore';
 import { CategorySelector } from '@/components/custom/CategorySelector';
 import { Category } from '@/app/types/category';
 import { useEffect, useState } from 'react';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
 import * as categoriesService from '@/app/services/categories.service';
 
 export default function CreateEventScreen() {
@@ -23,10 +22,7 @@ export default function CreateEventScreen() {
             const response = await categoriesService.getAll(); 
             setCategories(response);
         } catch (error: any) {
-            showMessage({
-                message: error.message || "An error occurred while fetching categories.",
-                type: "danger",
-            });        
+            console.error("An error occurred while fetching categories.", error);        
         }
     }
 
@@ -51,8 +47,6 @@ export default function CreateEventScreen() {
     }
         
   return (
-    <>
-    <FlashMessage position="top" />
     <View style={styles.container}>
         <View style={styles.header}> 
             <Text style={styles.title}>Create Event</Text>
@@ -157,7 +151,6 @@ export default function CreateEventScreen() {
         </ScrollView>
     
     </View>
-    </>
   );
 }
 

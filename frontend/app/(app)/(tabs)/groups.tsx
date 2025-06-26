@@ -3,7 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Pressable, TextInput, ScrollView } from 'react-native';
 import { GroupCard } from '@/components/custom/GroupCard';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
 import * as groupsService from '@/app/services/groups.service';
 import * as invitesService from '@/app/services/invites.service';
@@ -16,6 +16,7 @@ export default function GroupsScreen() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [invites, setInvites] = useState<Invite[]>([]);
   const router = useRouter();
+  const { successMessage } = useLocalSearchParams();
 
   const getGroups = async () => {
     try {
@@ -54,6 +55,16 @@ export default function GroupsScreen() {
     getGroups();
     getInvites();
   }, []);
+
+  // Show success message if passed via navigation params
+  useEffect(() => {
+    if (successMessage) {
+      showMessage({
+        message: successMessage as string,
+        type: "success",
+      });
+    }
+  }, [successMessage]);
 
   return (
     <>

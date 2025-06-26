@@ -1,7 +1,6 @@
 import { StyleSheet, View, Text, TextInput, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import FlashMessage, { showMessage } from 'react-native-flash-message';
 import { useEventStore } from '@/app/stores/useEventStore';
 
 export default function SelectGroupScreen() {
@@ -26,10 +25,7 @@ export default function SelectGroupScreen() {
           await submitEvent();
           router.push('/');
         } catch (error: any) {
-            showMessage({
-                message: error.message || "An error occurred while creating the event.",
-                type: "danger",
-            });
+            console.error("An error occurred while creating the event:", error);
         }
     }
 
@@ -47,15 +43,13 @@ export default function SelectGroupScreen() {
 
   
   return (
-    <>
-    <FlashMessage position="top" />
     <View style={styles.container}>
         <View style={styles.header}>
             <View style={styles.heading}>
-                    <Pressable onPress={() => handleGoBack()} style={styles.backButton}>
-                        <Ionicons size={20} name="chevron-back-outline" color={'black'} />
-                    </Pressable>
-                    <Text style={styles.title}>Preview Event</Text>
+                <Pressable onPress={() => handleGoBack()} style={styles.backButton}>
+                    <Ionicons size={20} name="chevron-back-outline" color={'black'} />
+                </Pressable>
+                <Text style={styles.title}>Preview Event</Text>
             </View>
              <View style={styles.stages}>
                 <View style={styles.stage} />
@@ -106,7 +100,6 @@ export default function SelectGroupScreen() {
         </ScrollView>
     
     </View>
-    </>
   );
 }
 
